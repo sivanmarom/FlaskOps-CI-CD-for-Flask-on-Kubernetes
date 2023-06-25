@@ -15,8 +15,8 @@ pipeline {
         stage('build and test infra_flask') {
             steps {
                 // dir('/home/ubuntu/workspace/deployment/final_project/apps/infra_flask_app') {
-                        sh 'sudo docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} .'
-                        sh "sudo docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
+                       sh "sudo docker build -t infra_flask_image:\${env.INFRA_FLASK_VERSION} ."
+                       sh "sudo docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:\${env.INFRA_FLASK_VERSION}"
                     // }
                 }
             }   
@@ -25,8 +25,9 @@ pipeline {
             steps {
                 //  dir('/home/ubuntu/workspace/deployment/final_project/apps/flask_app') {
                     
-                        sh 'sudo docker build -t flask_app_image:${env.FLASK_APP_VERSION} .'
-                        sh "sudo docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
+                       sh "sudo docker build -t flask_app_image:\${env.FLASK_APP_VERSION} ."
+                       sh "sudo docker run -it --name flask_app -p 5001:5001 -d flask_app_image:\${env.FLASK_APP_VERSION}"
+
                     
                 // }
              
@@ -36,7 +37,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh "sudo docker tag infra_flask_image:${INFRA_FLASK_VERSION} sivanmarom/infra_flask:${INFRA_FLASK_VERSION}"
+                    sh "sudo docker tag infra_flask_image:\${INFRA_FLASK_VERSION} sivanmarom/infra_flask:\${INFRA_FLASK_VERSION}"
                     sh "sudo docker push sivanmarom/infra_flask:${INFRA_FLASK_VERSION}"
                    
                 }
