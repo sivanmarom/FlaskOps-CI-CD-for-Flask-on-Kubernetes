@@ -14,32 +14,32 @@ pipeline {
 
         stage('build and test infra_flask') {
             steps {
-                sh "sudo docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
-                sh "sudo docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
+                sh "docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
+                sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
             }
         }
 
         stage('build and test flask_app') {
             steps {
-                sh "sudo docker build -t flask_app_image:${env.FLASK_APP_VERSION} ."
-                sh "sudo docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
+                sh "docker build -t flask_app_image:${env.FLASK_APP_VERSION} ."
+                sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
             }
         }
 
         stage('push to dockerhub infra_app') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'sudo docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh "sudo docker tag infra_flask_image:${env.INFRA_FLASK_VERSION} sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
-                    sh "sudo docker push sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    sh "docker tag infra_flask_image:${env.INFRA_FLASK_VERSION} sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+                    sh "docker push sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
                 }
             }
         }
 
         stage('push to dockerhub flask_app') {
             steps {
-                sh "sudo docker tag flask_app_image:${env.FLASK_APP_VERSION} sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
-                sh "sudo docker push sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
+                sh "docker tag flask_app_image:${env.FLASK_APP_VERSION} sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
+                sh "docker push sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
             }
         }
 
