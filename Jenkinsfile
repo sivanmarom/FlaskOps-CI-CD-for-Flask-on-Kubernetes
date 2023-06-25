@@ -14,21 +14,21 @@ pipeline {
 
         stage('build and test infra_flask') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/apps/infra_flask_app') {
+                // dir('/home/ubuntu/workspace/deployment/final_project/apps/infra_flask_app') {
                         sh 'sudo docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} .'
                         sh "sudo docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
-                    }
+                    // }
                 }
             }   
         
         stage('build and test flask_app') {
             steps {
-                 dir('/home/ubuntu/workspace/deployment/final_project/apps/flask_app') {
+                //  dir('/home/ubuntu/workspace/deployment/final_project/apps/flask_app') {
                     
                         sh 'sudo docker build -t flask_app_image:${env.FLASK_APP_VERSION} .'
                         sh "sudo docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
                     
-                }
+                // }
              
             }
         }
@@ -51,16 +51,16 @@ pipeline {
         
         stage('create EKS cluster') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/terraform/eks'){
+                // dir('/home/ubuntu/workspace/deployment/final_project/terraform/eks'){
                     sh 'terraform init'
                     sh 'terraform apply --auto-approve'
-                }
+                // }
             }
         }
         
         stage('apps deploy') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/k8s'){
+                // dir('/home/ubuntu/workspace/deployment/final_project/k8s'){
                     script{
                         def imageTag_flask = env.FLASK_APP_VERSION
                         def imageTag_infra = env.INFRA_APP_VERSION
@@ -69,7 +69,7 @@ pipeline {
                         sh 'kubectl apply -f -infra-flask-deployment.yaml'
                         sh 'kubectl apply -f flask-app-deployment.yaml'
                         sh 'kubectl get all --namespace flask-space'
-                    }
+                    // }
                 }
             }
         }
