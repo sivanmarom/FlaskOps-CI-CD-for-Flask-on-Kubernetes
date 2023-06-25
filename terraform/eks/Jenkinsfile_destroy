@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('create EKS cluster') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/terraform/eks'){
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s'){
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
                 }
