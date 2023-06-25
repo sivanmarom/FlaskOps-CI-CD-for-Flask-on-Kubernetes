@@ -9,7 +9,7 @@ pipeline {
             steps {
                 dir('/home/ubuntu/workspace/deployment') {
                     sh 'rm -rf *'
-                    sh 'git clone '
+                    sh 'git clone https://github.com/sivanmarom/final_project.git'
                 }
             }
         }
@@ -53,7 +53,7 @@ pipeline {
         
         stage('create EKS cluster') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/terraform/k8s'){
+                dir('/home/ubuntu/workspace/deployment/final_project/terraform/eks'){
                     sh 'terraform init'
                     sh 'terraform apply --auto-approve'
                 }
