@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" type="text/css" href='/static/mystyle.css'>
+</head>
+<body>
+    <header class="header_homepage">
+        <h1>Cloud Management App</h1>
+        <nav class="navbar_homepage">
+            <a href="/">Home</a>
+            <a href="/signup">Signup</a>
+        </nav>
+    </header>
+    <main>
+        <section class="homepage">
+            <h2>Welcome to AWS automation and deployment platform!</h2>
+            <p class="app_info">The app streamlines the process of creating new AWS instances, IAM users, and Docker images, and allows you to launch multiple instances with ease. We also offer Jenkins integration to help with continuous integration and delivery. With this platform, you can easily manage all of your AWS resources and quickly deploy new applications.</p>
+            <p class="registration">Please register in the <a class="register_link" href="/signup">sign-up form</a> to gain access to the app.</p>
+        </section>
+    </main>
+<div class="icons_container">
+     <img class="icon" src="{{ url_for('static', filename='aws.png') }}" alt="AWS icon">
+     <img class="icon" src="{{ url_for('static', filename='docker.png') }}" alt="Docker icon">
+     <img class="icon" src="{{ url_for('static', filename='jenkins.png') }}" alt="Jenkins icon">
+</div>
+</body>
+</html>

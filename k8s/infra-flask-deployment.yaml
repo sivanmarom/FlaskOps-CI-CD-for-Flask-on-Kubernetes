@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-space
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: infra-flask
+  namespace: flask-space
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: infra-flask
+  template:
+    metadata:
+      labels:
+        app: infra-flask
+    spec:
+      containers:
+        - name: infra-flask
+          image: sivanmarom/infra_flask:$(IMAGE_TAG)
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: infra-flask
+  namespace: flask-space
+spec:
+  selector:
+    app: infra-flask
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer

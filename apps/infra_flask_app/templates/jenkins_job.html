@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jenkins Jobs</title>
+    <link rel="stylesheet" type="text/css" href="/static/mystyle-result.css" />
+  </head>
+  <body>
+    <header>
+      <button class="button"><a href="/registered">Home</a></button>
+      <h1>Create Jenkins Job</h1>
+    </header>
+    <div class="freestyle_job">
+      <form method="POST" action="/jenkins_job/freestyle">
+        <h2>Create Freestyle Job</h2>
+        <label for="job_test">Job Name</label>
+        <input type="text" id="job_test" name="job_test" />
+        <input type="text" id="jenkins_url" name="jenkins_url" />
+        <button class="submit" type="submit">Create Job</button>
+      </form>
+    </div>
+    <div class="pipeline_job">
+      <form method="POST" action="/jenkins_job/pipeline">
+        <h2>Create Pipeline Job</h2>
+        <label for="job2">Job Name</label>
+        <input type="text" id="job2" name="job2" />
+        <select class="select" name="workspace" id="workspace" required>
+          <option value="Testing">Testing workspace</option>
+          <option value="Production">Production workspace</option>
+        </select>
+        <button class="submit" type="submit">Create Job</button>
+      </form>
+    </div>
+  </body>
+</html>
