@@ -14,7 +14,7 @@ pipeline {
 
         stage('build and test infra_flask') {
             steps {
-                dir('/var/lib/jenkins/workspace/deployment/apps/infra_flask_app') {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/apps/infra_flask_app') {
                 sh "docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
                 sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
             }
@@ -23,7 +23,7 @@ pipeline {
 
         stage('build and test flask_app') {
             steps {
-                dir('/var/lib/jenkins/workspace/deployment/apps/flask_app') {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/apps/flask_app') {
                 sh "docker build -t flask_app_image:${env.FLASK_APP_VERSION} ."
                 sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
             }
@@ -49,7 +49,7 @@ pipeline {
 
         stage('create EKS cluster') {
             steps {
-                dir('/var/lib/jenkins/workspace/deployment/terraform/eks') {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
                 sh 'terraform init'
                 sh 'terraform apply --auto-approve'
             }
@@ -58,7 +58,7 @@ pipeline {
 
         stage('apps deploy') {
             steps {
-                dir('/var/lib/jenkins/workspace/deployment/k8s') {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
                 script {
                     def imageTag_flask = env.FLASK_APP_VERSION
                     def imageTag_infra = env.INFRA_FLASK_VERSION
