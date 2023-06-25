@@ -7,10 +7,8 @@ pipeline {
     stages {
         stage('git clone') {
             steps {
-                dir('/home/ubuntu/workspace/deployment') {
                     sh 'rm -rf *'
                     sh 'git clone https://github.com/sivanmarom/final_project.git'
-                }
             }
         }
 
