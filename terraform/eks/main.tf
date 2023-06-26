@@ -89,7 +89,6 @@ resource "aws_iam_role_policy_attachment" "ec2_full_access_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
-
 # Create the EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.eks_cluster_name
@@ -102,8 +101,8 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   depends_on = [
     aws_security_group.eks_cluster_sg,
-    aws_iam_role_policy_attachment.full_access_policy_attachment,
-    aws_iam_role_policy_attachment.full_ec2_access_policy_attachment
+    aws_iam_role_policy_attachment.eks_cluster_policy_attachment,
+    aws_iam_role_policy_attachment.ec2_full_access_policy_attachment
   ]
 }
 
