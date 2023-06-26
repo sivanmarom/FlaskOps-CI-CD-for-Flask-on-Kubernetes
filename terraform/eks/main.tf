@@ -50,9 +50,10 @@ resource "aws_security_group" "eks_cluster_sg" {
   }
 }
 
-# Create the IAM role for the EKS cluster
-resource "aws_iam_role" "eks_cluster_role" {
-  name               = "eks-cluster-role"
+# Create the IAM role for EKS and EC2
+resource "aws_iam_role" "eks_ec2_role" {
+  name = "eks-ec2-role"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -60,14 +61,14 @@ resource "aws_iam_role" "eks_cluster_role" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "eks.amazonaws.com"
+        "Service": "ec2.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
     },
     {
       "Effect": "Allow",
       "Principal": {
-        "Service": "ec2.amazonaws.com"
+        "Service": "eks.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
     }
@@ -76,10 +77,16 @@ resource "aws_iam_role" "eks_cluster_role" {
 EOF
 }
 
-# Create the IAM role policy attachment for the EKS cluster
-resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = aws_iam_role.eks_cluster_role.arn
+# Attach full access policy to the IAM role
+resource "aws_iam_role_policy_attachment" "full_access_policy_attachment" {
+  role       = aws_iam_role.eks_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+# Attach full EC2 access policy to the IAM role
+resource "aws_iam_role_policy_attachment" "full_ec2_access_policy_attachment" {
+  role       = aws_iam_role.eks_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
 # Create the EKS cluster
@@ -94,7 +101,8 @@ resource "aws_eks_cluster" "eks_cluster" {
 
   depends_on = [
     aws_security_group.eks_cluster_sg,
-    aws_iam_role_policy_attachment.eks_cluster_policy_attachment
+    aws_iam_role_policy_attachment.full_access_policy_attachment,
+    aws_iam_role_policy_attachment.full_ec2_access_policy_attachment
   ]
 }
 
