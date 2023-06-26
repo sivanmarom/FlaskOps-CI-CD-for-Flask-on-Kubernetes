@@ -79,7 +79,7 @@ EOF
 # Create the IAM role policy attachment for the EKS cluster
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = aws_iam_role.eks_cluster_role.assume_role_policy
+  policy_arn = aws_iam_role.eks_cluster_role.arn
 }
 
 # Create the EKS cluster
