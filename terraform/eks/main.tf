@@ -77,17 +77,18 @@ resource "aws_iam_role" "eks_ec2_role" {
 EOF
 }
 
-# Attach full access policy to the IAM role
-resource "aws_iam_role_policy_attachment" "full_access_policy_attachment" {
+# Attach the AmazonEKSClusterPolicy to the IAM role
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   role       = aws_iam_role.eks_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# Attach full EC2 access policy to the IAM role
-resource "aws_iam_role_policy_attachment" "full_ec2_access_policy_attachment" {
+# Attach the AmazonEC2FullAccess policy to the IAM role
+resource "aws_iam_role_policy_attachment" "ec2_full_access_policy_attachment" {
   role       = aws_iam_role.eks_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
+
 
 # Create the EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
