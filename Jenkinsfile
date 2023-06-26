@@ -53,25 +53,26 @@ pipeline {
                 sh 'terraform init'
                 sh 'terraform apply --auto-approve'
                 sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
+                sh 'kubectl get nodes'
             }
             }
         }
 
-        stage('apps deploy') {
-            steps {
-                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
-                script {
-                    def imageTag_flask = env.FLASK_APP_VERSION
-                    def imageTag_infra = env.INFRA_FLASK_VERSION
-                    sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_infra}|' infra-flask-deployment.yaml"
-                    sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_flask}|' flask-app-deployment.yaml"
-                    sh 'kubectl apply -f infra-flask-deployment.yaml'
-                    sh 'kubectl apply -f flask-app-deployment.yaml'
-                    sh 'kubectl get all --namespace flask-space'
-                }
-            }
-        }
-        }
+        // stage('apps deploy') {
+        //     steps {
+        //         dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
+        //         script {
+        //             def imageTag_flask = env.FLASK_APP_VERSION
+        //             def imageTag_infra = env.INFRA_FLASK_VERSION
+        //             sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_infra}|' infra-flask-deployment.yaml"
+        //             sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_flask}|' flask-app-deployment.yaml"
+        //             sh 'kubectl apply -f infra-flask-deployment.yaml'
+        //             sh 'kubectl apply -f flask-app-deployment.yaml'
+        //             sh 'kubectl get all --namespace flask-space'
+        //         }
+        //     }
+        // }
+        // }
         stage('update versions') {
             steps {
                 script {
