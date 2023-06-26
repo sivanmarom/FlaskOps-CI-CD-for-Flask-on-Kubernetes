@@ -92,7 +92,7 @@ resource "aws_iam_role_policy_attachment" "full_ec2_access_policy_attachment" {
 # Create the EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.eks_cluster_name
-  role_arn = aws_iam_role.eks_cluster_role.arn
+  role_arn = aws_iam_role.eks_ec2_role.arn
   version  = var.eks_cluster_version
   vpc_config {
     subnet_ids         = aws_subnet.eks_subnet[*].id
