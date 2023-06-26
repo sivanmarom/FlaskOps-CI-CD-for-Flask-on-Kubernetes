@@ -52,6 +52,7 @@ pipeline {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
                 sh 'terraform init'
                 sh 'terraform apply --auto-approve'
+                sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
             }
             }
         }
