@@ -73,16 +73,18 @@ pipeline {
         //     }
         // }
         // }
-        stage('update versions') {
-            steps {
-                script {
-                    def increment = 0.01
-                    def infraVersion = Double.parseDouble(env.INFRA_FLASK_VERSION) + increment
-                    def flaskVersion = Double.parseDouble(env.FLASK_APP_VERSION) + increment
-                    env.INFRA_FLASK_VERSION = String.format('%.2f', infraVersion)
-                    env.FLASK_APP_VERSION = String.format('%.2f', flaskVersion)
-                }
-            }
-        }
+        //  stage('update versions') {
+        //     steps {
+        //         script {
+        //             def increment = 0.01
+        //             def infraVersion = env.INFRA_FLASK_VERSION.replace('.', '') // Remove additional decimal points
+        //             def flaskVersion = env.FLASK_APP_VERSION.replace('.', '') // Remove additional decimal points
+        //             infraVersion = Double.parseDouble(infraVersion) + increment
+        //             flaskVersion = Double.parseDouble(flaskVersion) + increment
+        //             env.INFRA_FLASK_VERSION = String.format('%.2f', infraVersion)
+        //             env.FLASK_APP_VERSION = String.format('%.2f', flaskVersion)
+        //         }
+        //     }
+        // }
     }
 }
