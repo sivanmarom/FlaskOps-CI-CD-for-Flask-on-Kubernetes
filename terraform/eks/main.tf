@@ -75,13 +75,6 @@ resource "aws_iam_role" "eks_cluster_role" {
 }
 EOF
 }
-
-# Create the IAM role policy attachment for the EKS cluster
-resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = aws_iam_role.eks_cluster_role.arn
-}
-
 # Create the EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.eks_cluster_name
@@ -93,10 +86,36 @@ resource "aws_eks_cluster" "eks_cluster" {
   }
 
   depends_on = [
-    aws_security_group.eks_cluster_sg,
-    aws_iam_role_policy_attachment.eks_cluster_policy_attachment
+    aws_security_group.eks_cluster_sg
   ]
 }
+# Create the IAM policy for the EKS cluster
+resource "aws_iam_policy" "eks_cluster_policy" {
+  name   = "eks-cluster-policy"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["eks:DescribeCluster"],
+      "Resource": ["arn:aws:eks:${var.region}:${var.account_id}:cluster/${aws_eks_cluster.eks_cluster.name}"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["ec2:DescribeInstances"],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+# Attach the IAM policy to the IAM role
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = aws_iam_policy.eks_cluster_policy.arn
+}
+
 
 # Create the EKS node group
 resource "aws_eks_node_group" "eks_node_group" {

@@ -31,3 +31,8 @@ variable "eks_cluster_role" {
   type    = string
   default = "eks-cluster-role"
 }
+
+variable "account_id" {
+  type    = string
+  default = "676000770422"
+}
