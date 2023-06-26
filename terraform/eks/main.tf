@@ -89,6 +89,17 @@ resource "aws_iam_role_policy_attachment" "ec2_full_access_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
+# Attach the required Amazon EKS managed policies to the IAM role
+resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
+  role       = aws_iam_role.eks_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_read_only_policy_attachment" {
+  role       = aws_iam_role.eks_ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
 # Create the EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.eks_cluster_name
@@ -102,7 +113,9 @@ resource "aws_eks_cluster" "eks_cluster" {
   depends_on = [
     aws_security_group.eks_cluster_sg,
     aws_iam_role_policy_attachment.eks_cluster_policy_attachment,
-    aws_iam_role_policy_attachment.ec2_full_access_policy_attachment
+    aws_iam_role_policy_attachment.ec2_full_access_policy_attachment,
+    aws_iam_role_policy_attachment.eks_worker_node_policy_attachment,
+    aws_iam_role_policy_attachment.ecr_read_only_policy_attachment
   ]
 }
 
