@@ -18,3 +18,18 @@ spec:
           image: sivanmarom/flask_app:$(IMAGE_TAG)
           ports:
             - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app
+  namespace: flask-space
+spec:
+  selector:
+    app: flask-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer

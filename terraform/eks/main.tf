@@ -2,7 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-# Create a VPC
 resource "aws_vpc" "eks_vpc" {
   cidr_block = var.cidr_block
 
@@ -11,23 +10,47 @@ resource "aws_vpc" "eks_vpc" {
   }
 }
 
-# Fetch available availability zones
 data "aws_availability_zones" "available_zones" {}
 
-# Create subnets within the VPC for each availability zone
 resource "aws_subnet" "eks_subnet" {
   count = length(data.aws_availability_zones.available_zones.names)
 
   vpc_id            = aws_vpc.eks_vpc.id
-  cidr_block        = "10.0.${count.index}.0/24" # Replace with your desired subnet CIDR block pattern
+  cidr_block        = "10.0.${count.index}.0/24"
   availability_zone = data.aws_availability_zones.available_zones.names[count.index]
 
   tags = {
     Name = "eks-subnet-${count.index + 1}"
   }
+
+  # Enable auto-assign public IP addresses
+  map_public_ip_on_launch = true
 }
 
-# Create a security group for the EKS cluster
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.eks_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+}
+
+resource "aws_route_table_association" "subnet_association" {
+  count = length(aws_subnet.eks_subnet)
+
+  subnet_id      = aws_subnet.eks_subnet[count.index].id
+  route_table_id = aws_route_table.public_rt.id
+}
+
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.eks_vpc.id
+
+  tags = {
+    Name = "eks-igw"
+  }
+}
+
 resource "aws_security_group" "eks_cluster_sg" {
   vpc_id = aws_vpc.eks_vpc.id
 
@@ -50,7 +73,6 @@ resource "aws_security_group" "eks_cluster_sg" {
   }
 }
 
-# Create the IAM role for EKS and EC2
 resource "aws_iam_role" "eks_ec2_role" {
   name = "eks-ec2-role"
 
@@ -77,34 +99,31 @@ resource "aws_iam_role" "eks_ec2_role" {
 EOF
 }
 
-# Attach the AmazonEKSClusterPolicy to the IAM role
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy_attachment" {
   role       = aws_iam_role.eks_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# Attach the AmazonEC2FullAccess policy to the IAM role
 resource "aws_iam_role_policy_attachment" "ec2_full_access_policy_attachment" {
   role       = aws_iam_role.eks_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
-# Attach the required Amazon EKS managed policies to the IAM role
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy_attachment" {
   role       = aws_iam_role.eks_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "ecr_read_only_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "ecr_readonly_policy_attachment" {
   role       = aws_iam_role.eks_ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-# Create the EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = var.eks_cluster_name
   role_arn = aws_iam_role.eks_ec2_role.arn
   version  = var.eks_cluster_version
+
   vpc_config {
     subnet_ids         = aws_subnet.eks_subnet[*].id
     security_group_ids = [aws_security_group.eks_cluster_sg.id]
@@ -114,14 +133,13 @@ resource "aws_eks_cluster" "eks_cluster" {
     aws_security_group.eks_cluster_sg,
     aws_iam_role_policy_attachment.eks_cluster_policy_attachment,
     aws_iam_role_policy_attachment.ec2_full_access_policy_attachment,
-    aws_iam_role_policy_attachment.eks_worker_node_policy_attachment,
-    aws_iam_role_policy_attachment.ecr_read_only_policy_attachment
+    aws_iam_role_policy_attachment.ecr_readonly_policy_attachment,
+    aws_iam_role_policy_attachment.eks_worker_node_policy_attachment
   ]
 }
 
-# Create the EKS node group
 resource "aws_eks_node_group" "eks_node_group" {
-  cluster_name    = aws_eks_cluster.eks_cluster.name
+  cluster_name    = var.eks_cluster_name
   node_group_name = "flask-nodes"
   node_role_arn   = aws_iam_role.eks_ec2_role.arn
   subnet_ids      = aws_subnet.eks_subnet[*].id
