@@ -5,13 +5,6 @@ pipeline {
         FLASK_APP_VERSION = '1.0.0'
     }
     stages {
-        stage('git clone') {
-            steps {
-                sh 'rm -rf *'
-                sh 'git clone https://github.com/sivanmarom/final_project.git'
-            }
-        }
-
         stage('build and test infra_flask') {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/apps/infra_flask_app') {
