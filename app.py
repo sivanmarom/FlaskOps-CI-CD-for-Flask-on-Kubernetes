@@ -1,16 +1,16 @@
 from flask import Flask, render_template, request, redirect
-from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 my_users = []
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///registered.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project4.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 
-class Profile(db.Model):
+class AppProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String(20), unique=False, nullable=False)
     password = db.Column(db.String(20), unique=False, nullable=False)
@@ -25,7 +25,7 @@ def Signup():
         user_name = request.form.get("username")
         password = request.form.get("password")
         my_users.append(user_name)
-        p = Profile(user_name=user_name, password=password)
+        p = AppProfile(user_name=user_name, password=password)
         db.session.add(p)
         db.session.commit()
         return redirect("/registered")

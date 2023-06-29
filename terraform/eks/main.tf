@@ -97,7 +97,7 @@ resource "aws_iam_role" "eks_ec2_role" {
   ]
 }
 EOF
-  # check additional permissions:
+
   inline_policy {
     name = "additional-permissions-policy"
 

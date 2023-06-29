@@ -1,6 +1,5 @@
 import subprocess
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import boto3
 import time
@@ -9,19 +8,6 @@ import os
 app = Flask(__name__)
 my_users = []
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my_site.db'
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-
-class Profile(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_name = db.Column(db.String(20), unique=False, nullable=False)
-    password = db.Column(db.String(20), unique=False, nullable=False)
-
-    def __str__(self):
-        return f"Username: {self.user_name}, password:{self.password}"
-
 
 @app.route('/signup', methods=['POST', 'GET'])
 def Signup():
@@ -29,9 +15,6 @@ def Signup():
         user_name = request.form.get("username")
         password = request.form.get("password")
         my_users.append(user_name)
-        p = Profile(user_name=user_name, password=password)
-        db.session.add(p)
-        db.session.commit()
         return redirect("/registered")
     return render_template("signup.html")
 
@@ -126,7 +109,8 @@ def create_docker_image():
     if request.method == 'POST':
         image_name = request.form.get('image_name')
         subprocess.run(['docker', 'build', '-t', f'{image_name}', '.'])
-        subprocess.run(['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
+        subprocess.run(
+            ['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
         subprocess.run(['docker', 'login', '-u', 'sivanmarom', '-p', ''])
         subprocess.run(['docker', 'push', f'sivanmarom/test:{image_name}'])
         return f'Docker image {image_name} created and pushed to Docker Hub'
@@ -141,9 +125,10 @@ def create_jenkins_user():
         new_password = request.form.get('new_password')
         full_name = request.form.get('full_name')
         email = request.form.get('email')
-
-        jenkins_url = 'http://23.22.159.73:8080/'
-        jar_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'jenkins-cli.jar')
+        jenkins_url = request.form.get('jenkins_url')
+        jar_filename = 'jenkins-cli.jar'
+        jar_path = os.path.join(os.path.dirname(
+            os.path.abspath(__file__)), jar_filename)
         java_path = r'C:\Program Files\Java\jdk-11\bin\java'
 
         command = f'echo \'jenkins.model.Jenkins.instance.securityRealm.createAccount("{new_username}", "{new_password}", "{full_name}", "{email}")\' | "{java_path}" -jar "{jar_path}" -s "{jenkins_url}" groovy ='
@@ -158,8 +143,9 @@ def create_jenkins_user():
 def create_jenkins_job_freestyle():
     if request.method == "POST":
         job_name = request.form.get("job_test")
-        jenkins_url =  request.form.get("jenkins_url")
-        server = jenkins.Jenkins(jenkins_url, username='sivan_marom', password='1234')
+        jenkins_url = request.form.get("jenkins_url")
+        server = jenkins.Jenkins(
+            jenkins_url, username='sivan_marom', password='1234')
         with open('templates/jenkins_job.xml', 'r') as f:
             job_config_xml = f.read()
         server.create_job(job_name, job_config_xml)
