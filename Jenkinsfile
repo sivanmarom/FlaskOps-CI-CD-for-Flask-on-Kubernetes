@@ -11,15 +11,15 @@ pipeline {
             steps {
                 script {
                     if (currentBuild.previousBuild != null && currentBuild.previousBuild.result == 'SUCCESS') {
-                        INFRA_FLASK_VERSION = currentBuild.previousBuild.buildVariables.INFRA_FLASK_VERSION
-                        FLASK_APP_VERSION = currentBuild.previousBuild.buildVariables.FLASK_APP_VERSION
+                       env.INFRA_FLASK_VERSION = currentBuild.previousBuild.buildVariables.INFRA_FLASK_VERSION
+                       env.FLASK_APP_VERSION = currentBuild.previousBuild.buildVariables.FLASK_APP_VERSION
                     } else {
-                        INFRA_FLASK_VERSION = '1.0.0'
-                        FLASK_APP_VERSION = '1.0.0'
+                      env.INFRA_FLASK_VERSION = '1.0.0'
+                       env.FLASK_APP_VERSION = '1.0.0'
                     }
                     echo "Current versions:"
-                    echo "INFRA_FLASK_VERSION: ${INFRA_FLASK_VERSION}"
-                    echo "FLASK_APP_VERSION: ${FLASK_APP_VERSION}"
+                    echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
+                    echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
                 }
             }
         }
