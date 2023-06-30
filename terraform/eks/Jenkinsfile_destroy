@@ -2,7 +2,14 @@ pipeline {
     agent any
     
     stages {
-        stage('create EKS cluster') {
+        stage('delete namespace') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {          
+                    sh 'kubectl delete all --all --namespace flask-space'
+                }
+            }
+        }
+        stage('destroy EKS cluster') {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks'){
                     sh 'terraform init'

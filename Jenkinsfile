@@ -90,26 +90,30 @@ pipeline {
 
         stage('update versions') {
             steps {
-                    script {
-                    def increment = 0.01
-                    def infraVersion = env.INFRA_FLASK_VERSION.replace('.', '')
-                    def flaskVersion = env.FLASK_APP_VERSION.replace('.', '')
-                    infraVersion = Double.parseDouble(infraVersion) + increment
-                    flaskVersion = Double.parseDouble(flaskVersion) + increment
-                    env.INFRA_FLASK_VERSION = String.format('%.2f', infraVersion)
-                    env.FLASK_APP_VERSION = String.format('%.2f', flaskVersion)
+                           script {
+            def increment = 0.01
+            def infraVersionParts = env.INFRA_FLASK_VERSION.split('\\.') // Splitting the version string into parts
+            def flaskVersionParts = env.FLASK_APP_VERSION.split('\\.')
 
-                    echo "Updated versions:"
-                    echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
-                    echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
+            // Incrementing the last part of the version
+            infraVersionParts[-1] = (infraVersionParts[-1] as int) + 1
+            flaskVersionParts[-1] = (flaskVersionParts[-1] as int) + 1
 
-                    buildInfo([
-                        buildVariables([
-                            string(name: 'INFRA_FLASK_VERSION', value: env.INFRA_FLASK_VERSION),
-                            string(name: 'FLASK_APP_VERSION', value: env.FLASK_APP_VERSION)
-                        ])
-                    ])
-                }
+            // Joining the version parts back into a string
+            env.INFRA_FLASK_VERSION = infraVersionParts.join('.')
+            env.FLASK_APP_VERSION = flaskVersionParts.join('.')
+
+            echo "Updated versions:"
+            echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
+            echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
+
+            buildInfo([
+                buildVariables([
+                    string(name: 'INFRA_FLASK_VERSION', value: env.INFRA_FLASK_VERSION),
+                    string(name: 'FLASK_APP_VERSION', value: env.FLASK_APP_VERSION)
+                ])
+            ])
+        }
             }
         }
     }
