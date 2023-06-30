@@ -1,11 +1,6 @@
 pipeline {
     agent any
     
-    environment {
-        INFRA_FLASK_VERSION = ''
-        FLASK_APP_VERSION = ''
-    }
-    
     stages {
         stage('Initialize') {
             steps {
@@ -14,7 +9,7 @@ pipeline {
                        env.INFRA_FLASK_VERSION = currentBuild.previousBuild.buildVariables.INFRA_FLASK_VERSION
                        env.FLASK_APP_VERSION = currentBuild.previousBuild.buildVariables.FLASK_APP_VERSION
                     } else {
-                      env.INFRA_FLASK_VERSION = '1.0.0'
+                        env.INFRA_FLASK_VERSION = '1.0.0'
                        env.FLASK_APP_VERSION = '1.0.0'
                     }
                     echo "Current versions:"
