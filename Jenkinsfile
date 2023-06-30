@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('build and test infra_flask') {
+                stage('build and test infra_flask') {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/infra_flask_app') {
                     sh "docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
@@ -95,23 +95,23 @@ pipeline {
 
         stage('update versions') {
             steps {
-                script {
+                    script {
                     def increment = 0.01
-                    def infraVersion = INFRA_FLASK_VERSION.replace('.', '')
-                    def flaskVersion = FLASK_APP_VERSION.replace('.', '')
+                    def infraVersion = env.INFRA_FLASK_VERSION.replace('.', '')
+                    def flaskVersion = env.FLASK_APP_VERSION.replace('.', '')
                     infraVersion = Double.parseDouble(infraVersion) + increment
                     flaskVersion = Double.parseDouble(flaskVersion) + increment
-                    INFRA_FLASK_VERSION = String.format('%.2f', infraVersion)
-                    FLASK_APP_VERSION = String.format('%.2f', flaskVersion)
-                    
+                    env.INFRA_FLASK_VERSION = String.format('%.2f', infraVersion)
+                    env.FLASK_APP_VERSION = String.format('%.2f', flaskVersion)
+
                     echo "Updated versions:"
-                    echo "INFRA_FLASK_VERSION: ${INFRA_FLASK_VERSION}"
-                    echo "FLASK_APP_VERSION: ${FLASK_APP_VERSION}"
-                    
+                    echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
+                    echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
+
                     buildInfo([
                         buildVariables([
-                            string(name: 'INFRA_FLASK_VERSION', value: INFRA_FLASK_VERSION),
-                            string(name: 'FLASK_APP_VERSION', value: FLASK_APP_VERSION)
+                            string(name: 'INFRA_FLASK_VERSION', value: env.INFRA_FLASK_VERSION),
+                            string(name: 'FLASK_APP_VERSION', value: env.FLASK_APP_VERSION)
                         ])
                     ])
                 }
