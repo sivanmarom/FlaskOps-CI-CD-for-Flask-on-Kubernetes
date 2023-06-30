@@ -7,9 +7,6 @@ pipeline {
     }
     
     stages {
-        stage('bad run'){
-            sh 'echo hello world
-        }
         stage('Initialize') {
             steps {
                 script {
