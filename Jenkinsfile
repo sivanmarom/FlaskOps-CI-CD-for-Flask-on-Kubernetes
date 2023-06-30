@@ -17,6 +17,9 @@ pipeline {
                         INFRA_FLASK_VERSION = '1.0.0'
                         FLASK_APP_VERSION = '1.0.0'
                     }
+                    echo "Current versions:"
+                    echo "INFRA_FLASK_VERSION: ${INFRA_FLASK_VERSION}"
+                    echo "FLASK_APP_VERSION: ${FLASK_APP_VERSION}"
                 }
             }
         }
@@ -100,6 +103,10 @@ pipeline {
                     flaskVersion = Double.parseDouble(flaskVersion) + increment
                     INFRA_FLASK_VERSION = String.format('%.2f', infraVersion)
                     FLASK_APP_VERSION = String.format('%.2f', flaskVersion)
+                    
+                    echo "Updated versions:"
+                    echo "INFRA_FLASK_VERSION: ${INFRA_FLASK_VERSION}"
+                    echo "FLASK_APP_VERSION: ${FLASK_APP_VERSION}"
                     
                     buildInfo([
                         buildVariables([
