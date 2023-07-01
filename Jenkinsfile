@@ -40,7 +40,7 @@ pipeline {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/infra_flask_app') {
                     sh "docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
-                    sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
+                    // sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
                 }
             }
         }
@@ -54,15 +54,17 @@ pipeline {
         //     }
         // }
 
-        // stage('push to dockerhub infra_app') {
-        //     steps {
-        //         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-        //             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-        //             sh "docker tag infra_flask_image:${env.INFRA_FLASK_VERSION} sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
-        //             sh "docker push sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
-        //         }
-        //     }
-        // }
+        stage('push to dockerhub infra_app') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    sh "docker tag infra_flask_image:${env.INFRA_FLASK_VERSION} sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+                    sh "docker push sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+                     sh "docker pull sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+                    sh "docker run -it --name infra_flask -p 5000:5000 -d sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+                }
+            }
+        }
 
         // stage('push to dockerhub flask_app') {
         //     steps {
