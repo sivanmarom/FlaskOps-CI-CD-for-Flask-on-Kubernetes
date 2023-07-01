@@ -22,7 +22,7 @@ spec:
             - name: IMAGE_TAG
               valueFrom:
                 configMapKeyRef:
-                  name: infra_flask
+                  name: infra-flask
                   key: image-tag
 ---
 apiVersion: v1
