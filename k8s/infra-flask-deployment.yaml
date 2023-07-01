@@ -1,3 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-space
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infra-flask
+  namespace: flask-space
+data:
+  image-tag: PLACEHOLDER-INFRA
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,15 +31,10 @@ spec:
     spec:
       containers:
         - name: infra-flask
-          image: sivanmarom/infra_flask:$(IMAGE_TAG)
+          image: sivanmarom/infra_flask:${configMap.infra-flask.data['image-tag']}
           ports:
             - containerPort: 5000
-          env:
-            - name: IMAGE_TAG
-              valueFrom:
-                configMapKeyRef:
-                  name: infra-flask
-                  key: image-tag
+
 ---
 apiVersion: v1
 kind: Service
