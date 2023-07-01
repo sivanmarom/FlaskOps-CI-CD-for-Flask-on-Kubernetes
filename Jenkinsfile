@@ -101,26 +101,5 @@ pipeline {
             }
         }
 
-        stage('update versions') {
-            steps {
-                           script {
-            def increment = 0.01
-            def infraVersionParts = env.INFRA_FLASK_VERSION.split('\\.') // Splitting the version string into parts
-            def flaskVersionParts = env.FLASK_APP_VERSION.split('\\.')
-
-            // Incrementing the last part of the version
-            infraVersionParts[-1] = (infraVersionParts[-1] as int) + 1
-            flaskVersionParts[-1] = (flaskVersionParts[-1] as int) + 1
-
-            // Joining the version parts back into a string
-            env.INFRA_FLASK_VERSION = infraVersionParts.join('.')
-            env.FLASK_APP_VERSION = flaskVersionParts.join('.')
-
-            echo "Updated versions:"
-            echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
-            echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
-        }
-            }
-        }
     }
 }
