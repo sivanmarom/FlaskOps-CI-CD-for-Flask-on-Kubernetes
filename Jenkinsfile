@@ -5,17 +5,27 @@ pipeline {
         stage('Initialize version') {
             steps {
                 script {
-                    if (currentBuild.previousBuild != null && currentBuild.previousBuild.result == 'SUCCESS') {
-                       env.INFRA_FLASK_VERSION = currentBuild.previousBuild.buildVariables.INFRA_FLASK_VERSION
-                       env.FLASK_APP_VERSION = currentBuild.previousBuild.buildVariables.FLASK_APP_VERSION
-                    } else {
-                        env.INFRA_FLASK_VERSION = '1.0.0'
-                       env.FLASK_APP_VERSION = '1.0.0'
-                    }
-                    echo "Current versions:"
-                    echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
-                    echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
-                }
+                        if (currentBuild.previousBuild != null && currentBuild.previousBuild.result == 'SUCCESS') {
+                            def previousInfraVersionParts = currentBuild.previousBuild.buildVariables.INFRA_FLASK_VERSION.split('\\.')
+                            def previousFlaskVersionParts = currentBuild.previousBuild.buildVariables.FLASK_APP_VERSION.split('\\.')
+
+                            // Incrementing the last part of the version
+                            previousInfraVersionParts[-1] = (previousInfraVersionParts[-1] as int) + 1
+                            previousFlaskVersionParts[-1] = (previousFlaskVersionParts[-1] as int) + 1
+
+                            // Joining the version parts back into a string
+                            env.INFRA_FLASK_VERSION = previousInfraVersionParts.join('.')
+                            env.FLASK_APP_VERSION = previousFlaskVersionParts.join('.')
+                        } 
+                        else {
+                            env.INFRA_FLASK_VERSION = '1.0.0'
+                            env.FLASK_APP_VERSION = '1.0.0'
+                        }
+
+                            echo "Current versions:"
+                            echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
+                            echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
+                }    
             }
         }
         
@@ -78,6 +88,9 @@ pipeline {
                     script {
                         def imageTag_flask = env.FLASK_APP_VERSION
                         def imageTag_infra = env.INFRA_FLASK_VERSION
+                        echo "INFRA_FLASK_VERSION: ${imageTag_infra}"
+                        echo "FLASK_APP_VERSION: ${imageTag_flask}"
+
                         sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_infra}|' infra-flask-deployment.yaml"
                         sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_flask}|' flask-app-deployment.yaml"
                         sh 'kubectl apply -f infra-flask-deployment.yaml'
