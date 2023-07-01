@@ -2,6 +2,11 @@ pipeline {
     agent any
     
     stages {
+        stage('Terminate Docker Containers') {
+            steps {
+                sh 'docker kill $(docker ps -q)'
+            }
+        }
         stage('delete namespace') {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {          
