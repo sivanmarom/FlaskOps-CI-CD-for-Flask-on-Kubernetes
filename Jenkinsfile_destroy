@@ -2,9 +2,9 @@ pipeline {
     agent any
     
     stages {
-        stage('Terminate Docker Containers') {
+        stage('Terminate and Delete Docker Containers') {
             steps {
-                sh 'docker kill $(docker ps -q)'
+                sh 'docker rm -f $(docker ps -aq)'
             }
         }
         stage('delete namespace') {
