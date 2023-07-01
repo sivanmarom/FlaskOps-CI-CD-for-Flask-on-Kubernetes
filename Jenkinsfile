@@ -87,7 +87,9 @@ pipeline {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
                     script {
                         def imageTag_flask = env.FLASK_APP_VERSION
-                        def imageTag_infra = env.INFRA_FLASK_VERSION                    
+                        def imageTag_infra = env.INFRA_FLASK_VERSION        
+                        echo "imageTag_flask type: ${imageTag_flask.getClass()}"
+                        echo "imageTag_infra type: ${imageTag_infra.getClass()}"            
                         sh "sed -i 's/PLACEHOLDER-INFRA/${imageTag_infra}/g' config-map.yaml"
                         sh "sed -i 's/PLACEHOLDER-FLASK/${imageTag_flask}/g' config-map.yaml"
                         sh "cat config-map.yaml"
