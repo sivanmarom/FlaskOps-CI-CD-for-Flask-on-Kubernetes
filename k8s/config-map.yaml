@@ -11,7 +11,7 @@ metadata:
   name: infra-flask
   namespace: flask-space
 data:
-  image-tag: PLACEHOLDER
+  image-tag: PLACEHOLDER-INFRA
 
 ---
 
@@ -21,4 +21,4 @@ metadata:
   name: flask-app
   namespace: flask-space
 data:
-  image-tag: PLACEHOLDER
+  image-tag: PLACEHOLDER-FLASK

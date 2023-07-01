@@ -88,9 +88,9 @@ pipeline {
                     script {
                         def imageTag_flask = env.FLASK_APP_VERSION
                         def imageTag_infra = env.INFRA_FLASK_VERSION                    
-                        sh "sed -i 's/PLACEHOLDER/${imageTag_infra}/g' config_map.yaml"
-                        sh "sed -i 's/PLACEHOLDER/${imageTag_flask}/g' config_map.yaml"
-                        sh 'kubectl apply -f config_map.yaml'
+                        sh "sed -i 's/PLACEHOLDER-INFRA/${imageTag_infra}/g' config-map.yaml"
+                        sh "sed -i 's/PLACEHOLDER-FLASK/${imageTag_flask}/g' config-map.yaml"
+                        sh 'kubectl apply -f config-map.yaml'
                         sh 'kubectl apply -f infra-flask-deployment.yaml'
                         sh 'kubectl apply -f flask-app-deployment.yaml'
                         sh 'kubectl get all --namespace flask-space'
