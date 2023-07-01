@@ -106,13 +106,6 @@ pipeline {
             echo "Updated versions:"
             echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
             echo "FLASK_APP_VERSION: ${env.FLASK_APP_VERSION}"
-
-            buildInfo([
-                buildVariables([
-                    string(name: 'INFRA_FLASK_VERSION', value: env.INFRA_FLASK_VERSION),
-                    string(name: 'FLASK_APP_VERSION', value: env.FLASK_APP_VERSION)
-                ])
-            ])
         }
             }
         }
