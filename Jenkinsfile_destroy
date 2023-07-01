@@ -2,11 +2,11 @@ pipeline {
     agent any
     
     stages {
-        stage('Terminate and Delete Docker Containers') {
-            steps {
-                sh 'docker rm -f $(docker ps -aq)'
-            }
-        }
+        // stage('Terminate and Delete Docker Containers') {
+        //     steps {
+        //         sh 'docker rm -f $(docker ps -aq)'
+        //     }
+        // }
         stage('delete namespace') {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {          
