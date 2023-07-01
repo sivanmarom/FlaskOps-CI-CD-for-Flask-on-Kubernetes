@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: infra-flask
-          image: sivanmarom/infra_flask:$(IMAGE_TAG)
+          image: sivanmarom/infra_flask:${IMAGE_TAG}
           ports:
             - containerPort: 5000
 ---

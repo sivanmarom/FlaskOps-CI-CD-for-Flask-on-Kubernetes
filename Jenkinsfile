@@ -40,19 +40,19 @@ pipeline {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/infra_flask_app') {
                     sh "docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
-                    // sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
+                    sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
                 }
             }
         }
 
-        // stage('build and test flask_app') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project') {
-        //             sh "docker build -t flask_app_image:${env.FLASK_APP_VERSION} ."
-        //             sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
-        //         }
-        //     }
-        // }
+        stage('build and test flask_app') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project') {
+                    sh "docker build -t flask_app_image:${env.FLASK_APP_VERSION} ."
+                    sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
+                }
+            }
+        }
 
         stage('push to dockerhub infra_app') {
             steps {
@@ -60,48 +60,46 @@ pipeline {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                     sh "docker tag infra_flask_image:${env.INFRA_FLASK_VERSION} sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
                     sh "docker push sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
-                     sh "docker pull sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
-                    sh "docker run -it --name infra_flask -p 5000:5000 -d sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
                 }
             }
         }
 
-        // stage('push to dockerhub flask_app') {
-        //     steps {
-        //         sh "docker tag flask_app_image:${env.FLASK_APP_VERSION} sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
-        //         sh "docker push sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
-        //     }
-        // }
+        stage('push to dockerhub flask_app') {
+            steps {
+                sh "docker tag flask_app_image:${env.FLASK_APP_VERSION} sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
+                sh "docker push sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
+            }
+        }
 
-        // stage('create EKS cluster') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
-        //             sh 'terraform init'
-        //             sh 'terraform apply --auto-approve'
-        //             sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
-        //             sh 'kubectl get nodes'
-        //         }
-        //     }
-        // }
+        stage('create EKS cluster') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
+                    sh 'terraform init'
+                    sh 'terraform apply --auto-approve'
+                    sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
+                    sh 'kubectl get nodes'
+                }
+            }
+        }
 
-        // stage('apps deploy') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
-        //             script {
-        //                 def imageTag_flask = env.FLASK_APP_VERSION
-        //                 def imageTag_infra = env.INFRA_FLASK_VERSION
-        //                 echo "INFRA_FLASK_VERSION: ${imageTag_infra}"
-        //                 echo "FLASK_APP_VERSION: ${imageTag_flask}"
+        stage('apps deploy') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
+                    script {
+                        def imageTag_flask = env.FLASK_APP_VERSION
+                        def imageTag_infra = env.INFRA_FLASK_VERSION
+                        echo "INFRA_FLASK_VERSION: ${imageTag_infra}"
+                        echo "FLASK_APP_VERSION: ${imageTag_flask}"
 
-        //                 sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_infra}|' infra-flask-deployment.yaml"
-        //                 // sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_flask}|' flask-app-deployment.yaml"
-        //                 sh 'kubectl apply -f infra-flask-deployment.yaml'
-        //                 // sh 'kubectl apply -f flask-app-deployment.yaml'
-        //                 sh 'kubectl get all --namespace flask-space'
-        //             }
-        //         }
-        //     }
-        // }
+                        sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_infra}|' infra-flask-deployment.yaml"
+                        sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_flask}|' flask-app-deployment.yaml"
+                        sh 'kubectl apply -f infra-flask-deployment.yaml'
+                        sh 'kubectl apply -f flask-app-deployment.yaml'
+                        sh 'kubectl get all --namespace flask-space'
+                    }
+                }
+            }
+        }
 
     }
 }

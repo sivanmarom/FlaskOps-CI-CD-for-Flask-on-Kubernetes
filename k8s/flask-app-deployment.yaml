@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: sivanmarom/flask_app:$(IMAGE_TAG)
+          image: sivanmarom/flask_app:${IMAGE_TAG}
           ports:
             - containerPort: 5000
 
