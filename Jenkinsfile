@@ -92,9 +92,9 @@ pipeline {
                         echo "FLASK_APP_VERSION: ${imageTag_flask}"
 
                         sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_infra}|' infra-flask-deployment.yaml"
-                        sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_flask}|' flask-app-deployment.yaml"
+                        // sh "sed -i 's|{{IMAGE_TAG}}|${imageTag_flask}|' flask-app-deployment.yaml"
                         sh 'kubectl apply -f infra-flask-deployment.yaml'
-                        sh 'kubectl apply -f flask-app-deployment.yaml'
+                        // sh 'kubectl apply -f flask-app-deployment.yaml'
                         sh 'kubectl get all --namespace flask-space'
                     }
                 }
