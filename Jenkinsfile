@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     stages {
-        stage('Initialize') {
+        stage('Initialize version') {
             steps {
                 script {
                     if (currentBuild.previousBuild != null && currentBuild.previousBuild.result == 'SUCCESS') {
