@@ -31,7 +31,13 @@ spec:
     spec:
       containers:
         - name: infra-flask
-          image: sivanmarom/infra_flask:${configMap.infra-flask.data['image-tag']}
+          image: sivanmarom/infra_flask:${INFRA_FLASK_VERSION}
+          env:
+            - name: INFRA_FLASK_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: infra-flask
+                  key: image-tag
           ports:
             - containerPort: 5000
 

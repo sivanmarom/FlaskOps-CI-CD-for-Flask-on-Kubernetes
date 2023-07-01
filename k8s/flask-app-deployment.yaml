@@ -23,9 +23,16 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: sivanmarom/flask_app:${configMap.flask-app.data['image-tag']}
+          image: sivanmarom/flask_app:${FLASK_VERSION}
+          env:
+            - name: FLASK_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: flask-app
+                  key: image-tag
           ports:
             - containerPort: 5000
+
 
 ---
 apiVersion: v1
