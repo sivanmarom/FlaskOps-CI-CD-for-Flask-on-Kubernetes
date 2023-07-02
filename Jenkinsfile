@@ -14,13 +14,12 @@ pipeline {
                             previousFlaskVersionParts[-1] = (previousFlaskVersionParts[-1] as int) + 1
 
                             // Joining the version parts back into a string
-                            env.INFRA_FLASK_VERSION = previousInfraVersionParts.join('.')
-                            env.FLASK_APP_VERSION = previousFlaskVersionParts.join('.')
-                        } 
-                        else {
-                            env.INFRA_FLASK_VERSION = '1.0.0'
-                            env.FLASK_APP_VERSION = '1.0.0'
-                        }
+                            env.INFRA_FLASK_VERSION = 'v' + previousInfraVersionParts.join('.')
+                            env.FLASK_APP_VERSION = 'v' + previousFlaskVersionParts.join('.')
+                        } else {
+                            env.INFRA_FLASK_VERSION = 'v1.0.0'
+                            env.FLASK_APP_VERSION = 'v1.0.0'
+            }
 
                             echo "Current versions:"
                             echo "INFRA_FLASK_VERSION: ${env.INFRA_FLASK_VERSION}"
