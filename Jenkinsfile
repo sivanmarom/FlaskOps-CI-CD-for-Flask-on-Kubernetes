@@ -36,51 +36,51 @@ pipeline {
             }
         }
 
-                stage('build and test infra_flask') {
-            steps {
-                dir('/var/lib/jenkins/workspace/deployment/final_project/infra_flask_app') {
-                    sh "docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
-                    sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
-                }
-            }
-        }
+        //         stage('build and test infra_flask') {
+        //     steps {
+        //         dir('/var/lib/jenkins/workspace/deployment/final_project/infra_flask_app') {
+        //             sh "docker build -t infra_flask_image:${env.INFRA_FLASK_VERSION} ."
+        //             sh "docker run -it --name infra_flask -p 5000:5000 -d infra_flask_image:${env.INFRA_FLASK_VERSION}"
+        //         }
+        //     }
+        // }
 
-        stage('build and test flask_app') {
-            steps {
-                dir('/var/lib/jenkins/workspace/deployment/final_project') {
-                    sh "docker build -t flask_app_image:${env.FLASK_APP_VERSION} ."
-                    sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
-                }
-            }
-        }
+        // stage('build and test flask_app') {
+        //     steps {
+        //         dir('/var/lib/jenkins/workspace/deployment/final_project') {
+        //             sh "docker build -t flask_app_image:${env.FLASK_APP_VERSION} ."
+        //             sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${env.FLASK_APP_VERSION}"
+        //         }
+        //     }
+        // }
 
-        stage('push to dockerhub infra_app') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh "docker tag infra_flask_image:${env.INFRA_FLASK_VERSION} sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
-                    sh "docker push sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
-                }
-            }
-        }
+        // stage('push to dockerhub infra_app') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+        //             sh "docker tag infra_flask_image:${env.INFRA_FLASK_VERSION} sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+        //             sh "docker push sivanmarom/infra_flask:${env.INFRA_FLASK_VERSION}"
+        //         }
+        //     }
+        // }
 
-        stage('push to dockerhub flask_app') {
-            steps {
-                sh "docker tag flask_app_image:${env.FLASK_APP_VERSION} sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
-                sh "docker push sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
-            }
-        }
+        // stage('push to dockerhub flask_app') {
+        //     steps {
+        //         sh "docker tag flask_app_image:${env.FLASK_APP_VERSION} sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
+        //         sh "docker push sivanmarom/flask_app:${env.FLASK_APP_VERSION}"
+        //     }
+        // }
 
-        stage('create EKS cluster') {
-            steps {
-                dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
-                    sh 'terraform init'
-                    sh 'terraform apply --auto-approve'
-                    sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
-                    sh 'kubectl get nodes'
-                }
-            }
-        }
+        // stage('create EKS cluster') {
+        //     steps {
+        //         dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
+        //             sh 'terraform init'
+        //             sh 'terraform apply --auto-approve'
+        //             sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
+        //             sh 'kubectl get nodes'
+        //         }
+        //     }
+        // }
 
         stage('apps deploy') {
             steps {
@@ -92,9 +92,9 @@ pipeline {
                         sh "sed -i 's/PLACEHOLDER-FLASK/${imageTag_flask}/g' flask-app-deployment.yaml"
                         sh "cat infra-flask-deployment.yaml"
                         sh "cat flask-app-deployment.yaml"
-                        sh 'kubectl apply -f infra-flask-deployment.yaml'
-                        sh 'kubectl apply -f flask-app-deployment.yaml'
-                        sh 'kubectl get all --namespace flask-space'
+                        // sh 'kubectl apply -f infra-flask-deployment.yaml'
+                        // sh 'kubectl apply -f flask-app-deployment.yaml'
+                        // sh 'kubectl get all --namespace flask-space'
                     }
                 }
             }
