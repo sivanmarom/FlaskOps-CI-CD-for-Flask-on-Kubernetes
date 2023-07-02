@@ -11,7 +11,7 @@ metadata:
   name: infra-flask
   namespace: flask-space
 data:
-  image-tag: PLACEHOLDER-INFRA
+  image-tag: PLACEHOLDER_INFRA
 
 ---
 apiVersion: apps/v1
@@ -31,9 +31,9 @@ spec:
     spec:
       containers:
         - name: infra-flask
-          image: sivanmarom/infra_flask:${PLACEHOLDER-INFRA}
+          image: sivanmarom/infra_flask:${PLACEHOLDER_INFRA}
           env:
-            - name: PLACEHOLDER-INFRA
+            - name: PLACEHOLDER_INFRA
               valueFrom:
                 configMapKeyRef:
                   name: infra-flask
