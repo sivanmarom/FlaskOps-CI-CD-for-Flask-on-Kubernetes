@@ -79,7 +79,7 @@ pipeline {
                     sh 'kubectl get nodes'
                 }
             }
-        
+        }
 
         stage('apps deploy') {
             steps {
