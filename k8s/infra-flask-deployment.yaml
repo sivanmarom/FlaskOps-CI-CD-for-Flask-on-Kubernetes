@@ -31,9 +31,9 @@ spec:
     spec:
       containers:
         - name: infra-flask
-          image: sivanmarom/infra_flask:${INFRA_FLASK_VERSION}
+          image: sivanmarom/infra_flask:${PLACEHOLDER-INFRA}
           env:
-            - name: INFRA_FLASK_VERSION
+            - name: PLACEHOLDER-INFRA
               valueFrom:
                 configMapKeyRef:
                   name: infra-flask

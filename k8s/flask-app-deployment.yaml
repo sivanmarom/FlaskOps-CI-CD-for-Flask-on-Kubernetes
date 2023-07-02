@@ -23,9 +23,9 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: sivanmarom/flask_app:${FLASK_VERSION}
+          image: sivanmarom/flask_app:${PLACEHOLDER-FLASK}
           env:
-            - name: FLASK_VERSION
+            - name: PLACEHOLDER-FLASK
               valueFrom:
                 configMapKeyRef:
                   name: flask-app
