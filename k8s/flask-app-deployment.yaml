@@ -1,11 +1,3 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: flask-app
-  namespace: flask-space
-data:
-  image-tag: PLACEHOLDER_FLASK
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,13 +15,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: sivanmarom/flask_app:${PLACEHOLDER_FLASK}
-          env:
-            - name: PLACEHOLDER_FLASK
-              valueFrom:
-                configMapKeyRef:
-                  name: flask-app
-                  key: image-tag
+          image: sivanmarom/flask_app:1.0.0
           ports:
             - containerPort: 5000
 

@@ -87,7 +87,7 @@ pipeline {
                     script {
 
                         sh 'kubectl apply -f infra-flask-deployment.yaml'
-                        // sh 'kubectl apply -f flask-app-deployment.yaml'
+                        sh 'kubectl apply -f flask-app-deployment.yaml'
                         sh 'kubectl get all --namespace flask-space'
                     }
                 }

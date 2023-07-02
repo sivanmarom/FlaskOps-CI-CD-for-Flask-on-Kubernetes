@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: infra-flask
-          image: sivanmarom/infra_flask:$(curl -s "https://hub.docker.com/v2/repositories/sivanmarom/infra_flask/tags/?page_size=1" | jq -r '.results[0].name')
+          image: sivanmarom/infra_flask:1.0.0
           ports:
             - containerPort: 5000
 
