@@ -4,16 +4,6 @@ metadata:
   name: flask-space
 
 ---
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: infra-flask
-  namespace: flask-space
-data:
-  image-tag: PLACEHOLDER_INFRA
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,13 +21,7 @@ spec:
     spec:
       containers:
         - name: infra-flask
-          image: sivanmarom/infra_flask:${PLACEHOLDER_INFRA}
-          env:
-            - name: PLACEHOLDER_INFRA
-              valueFrom:
-                configMapKeyRef:
-                  name: infra-flask
-                  key: image-tag
+          image: sivanmarom/infra_flask:$(curl -s "https://hub.docker.com/v2/repositories/sivanmarom/infra_flask/tags/?page_size=1" | jq -r '.results[0].name')
           ports:
             - containerPort: 5000
 
