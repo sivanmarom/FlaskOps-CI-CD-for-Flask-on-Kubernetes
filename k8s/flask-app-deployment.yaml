@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: ${PLACEHOLDER_FLASK}
+          image: sivanmarom/${PLACEHOLDER_FLASK}
           env:
             - name: PLACEHOLDER_FLASK
               valueFrom:
