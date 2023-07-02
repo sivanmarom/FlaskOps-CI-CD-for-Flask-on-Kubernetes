@@ -85,8 +85,8 @@ pipeline {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
                     script {
-                     def imageTag_flask ='v' + env.FLASK_APP_VERSION
-                     def imageTag_infra ='v' + env.INFRA_FLASK_VERSION
+                     def imageTag_flask = env.FLASK_APP_VERSION
+                     def imageTag_infra =env.INFRA_FLASK_VERSION
                      sh "sed -i 's#PLACEHOLDER_INFRA#${imageTag_infra}#g' infra-flask-deployment.yaml"
                      sh "sed -i 's#PLACEHOLDER_FLASK#${imageTag_flask}#g' flask-app-deployment.yaml"
                      sh "cat flask-app-deployment.yaml"
