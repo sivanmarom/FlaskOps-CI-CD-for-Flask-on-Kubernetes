@@ -90,8 +90,8 @@ pipeline {
                      def imageTag_infra ='v' + env.INFRA_FLASK_VERSION
                      sh "sed -i 's#PLACEHOLDER_INFRA#${imageTag_infra}#g' infra-flask-deployment.yaml"
                      sh "sed -i 's#PLACEHOLDER_FLASK#${imageTag_flask}#g' flask-app-deployment.yaml"
-                     sh "cat flask-app-deployment-modified.yaml"
-                      sh "cat infra-flask-deployment-modified.yaml"
+                     sh "cat flask-app-deployment.yaml"
+                      sh "cat infra-flask-deployment.yaml"
 
                         // sh 'kubectl apply -f infra-flask-deployment.yaml'
                         // sh 'kubectl apply -f flask-app-deployment.yaml'
