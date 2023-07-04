@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,27 +10,21 @@ spec:
       app: infra-flask
   template:
     metadata:
-      labels:
-        app: infra-flask
-    spec:
-      containers:
-        - name: infra-flask
-          image: "sivanmarom/infra_flask:${PLACEHOLDER-INFRA}"
-          env:
-            - name: PLACEHOLDER-INFRA
-              valueFrom:
-                configMapKeyRef:
-                  name: infra-flask-config
-                  key: image-tag
-          ports:
-            - containerPort: 5000
-          resources:
-            limits:
-              cpu: "1"
-              memory: "1Gi"
-            requests:
-              cpu: "0.5"
-              memory: "512Mi"
+    labels:
+      app: infra-flask
+  spec:
+    containers:
+      - name: infra-flask
+        image: "sivanmarom/infra_flask:${placeholder_infra}"
+        ports:
+          - containerPort: 5000
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "0.5"
+            memory: "512Mi"
 ---
 apiVersion: v1
 kind: Service
