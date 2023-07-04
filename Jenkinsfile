@@ -17,8 +17,8 @@ pipeline {
                 env.INFRA_FLASK_VERSION = previousInfraVersionParts.join('.')
                 env.FLASK_APP_VERSION = previousFlaskVersionParts.join('.')
             } else {
-                env.INFRA_FLASK_VERSION = "version_1.0.0"
-                env.FLASK_APP_VERSION = "version_1.0.0"
+                env.INFRA_FLASK_VERSION = "v_1.0.0"
+                env.FLASK_APP_VERSION = "v_1.0.0"
             }
 
             echo "Current versions:"
