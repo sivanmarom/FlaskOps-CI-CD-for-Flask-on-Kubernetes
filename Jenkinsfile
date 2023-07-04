@@ -92,9 +92,9 @@ pipeline {
                         sh 'kubectl apply -f namespace.yaml'
                         
                         // Update values.yaml with image tag parameters
-                        sh "sed -i 's/tag: 1.0.0/tag: ${imageTagFlask}/' values.yaml"
-                        sh "sed -i 's/tag: 1.0.0/tag: ${imageTagInfra}/' values.yaml"
-                        
+                        sh "sed -i 's/tag: latest/tag: ${imageTagFlask}/' values.yaml"
+                        sh "sed -i 's/tag: latest/tag: ${imageTagInfra}/' values.yaml"
+                        sh "cat values.yaml"
                         // Build your Helm chart
                         sh 'helm package .'
                         sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
