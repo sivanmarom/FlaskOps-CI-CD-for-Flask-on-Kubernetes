@@ -91,9 +91,12 @@ pipeline {
                 
                         sh "kubectl apply -f namespace.yaml"
                 
-                        sh "ytt -f infra-flask-deployment.yaml -v placeholder_infra=${imageTagInfra} | kubectl apply -f infra-flask-deployment.yaml"
-                        sh "ytt -f flask-app-deployment.yaml -v placeholder_flask=${imageTagFlask} | kubectl apply -f flask-app-deployment.yaml"
-                
+                         sh "ytt -f infra-flask-deployment.yaml -v placeholder_infra=${imageTagInfra} -o yaml --ignore-unknown-comments > infra-flask-deployment-updated.yaml"
+                         sh "ytt -f flask-app-deployment.yaml -v placeholder_flask=${imageTagFlask} -o yaml --ignore-unknown-comments > flask-app-deployment-updated.yaml"
+
+                         sh "kubectl apply -f infra-flask-deployment-updated.yaml --namespace flask-space"
+                        sh "kubectl apply -f flask-app-deployment-updated.yaml --namespace flask-space"
+
                         sh 'kubectl get all --namespace flask-space'
                     }
                 }
