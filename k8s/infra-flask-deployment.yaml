@@ -1,30 +1,32 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: infra-flask
-  namespace: flask-space
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: infra-flask
-  template:
-    metadata:
-    labels:
-      app: infra-flask
+infra:
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: infra-flask
+    namespace: flask-space
   spec:
-    containers:
-      - name: infra-flask
-        image: "sivanmarom/infra_flask:${placeholder_infra}"
-        ports:
-          - containerPort: 5000
-        resources:
-          limits:
-            cpu: "1"
-            memory: "1Gi"
-          requests:
-            cpu: "0.5"
-            memory: "512Mi"
+    replicas: 2
+    selector:
+      matchLabels:
+        app: infra-flask
+    template:
+      metadata:
+        labels:
+          app: infra-flask
+      spec:
+        containers:
+          - name: infra-flask
+            image: "sivanmarom/infra_flask:${placeholder_infra}"
+            ports:
+              - containerPort: 5000
+            resources:
+              limits:
+                cpu: "1"
+                memory: "1Gi"
+              requests:
+                cpu: "0.5"
+                memory: "512Mi"
+
 ---
 apiVersion: v1
 kind: Service
