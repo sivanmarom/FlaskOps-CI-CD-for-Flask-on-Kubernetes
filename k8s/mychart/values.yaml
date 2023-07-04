@@ -1,0 +1,7 @@
+image_flask:
+  repository: sivanmarom/flask_app
+  tag: 1.0.0
+
+image_infra:
+  repository: sivanmarom/infra_flask
+  tag: 1.0.0

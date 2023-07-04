@@ -16,7 +16,7 @@ infra:
       spec:
         containers:
           - name: infra-flask
-            image: "sivanmarom/infra_flask:${placeholder_infra}"
+            image: "{{ .Values.image_infra.repository }}:{{ .Values.image_infra.tag }}"
             ports:
               - containerPort: 5000
             resources:
@@ -26,7 +26,6 @@ infra:
               requests:
                 cpu: "0.5"
                 memory: "512Mi"
-
 ---
 apiVersion: v1
 kind: Service

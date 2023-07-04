@@ -15,7 +15,7 @@ spec:
   spec:
     containers:
       - name: flask-app
-        image: "sivanmarom/flask_app:${placeholder_flask}"
+        image: "{{ .Values.image_flask.repository }}:{{ .Values.image_flask.tag }}"
         ports:
           - containerPort: 5000
         resources:

@@ -82,21 +82,33 @@ pipeline {
             }
         }
 
-        stage('apps deploy') {
+       stage('Helm Chart') {
             steps {
-                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s/mychart') {
                     script {
-                       def imageTagFlask = env.FLASK_APP_VERSION
-                       def imageTagInfra = env.INFRA_FLASK_VERSION
-                
-                        sh "kubectl apply -f namespace.yaml"
-                
-                         sh "ytt -f infra-flask-deployment.yaml -v placeholder_infra=${imageTagInfra} -o yaml --ignore-unknown-comments > infra-flask-deployment-updated.yaml"
-                         sh "ytt -f flask-app-deployment.yaml -v placeholder_flask=${imageTagFlask} -o yaml --ignore-unknown-comments > flask-app-deployment-updated.yaml"
-
-                         sh "kubectl apply -f infra-flask-deployment-updated.yaml --namespace flask-space"
-                        sh "kubectl apply -f flask-app-deployment-updated.yaml --namespace flask-space"
-
+                        def imageTagFlask = env.FLASK_APP_VERSION
+                        def imageTagInfra = env.INFRA_FLASK_VERSION
+                        
+                        sh 'kubectl apply -f namespace.yaml'
+                        
+                        // Update values.yaml with image tag parameters
+                        sh "sed -i 's/tag: 1.0.0/tag: ${imageTagFlask}/' values.yaml"
+                        sh "sed -i 's/tag: 1.0.0/tag: ${imageTagInfra}/' values.yaml"
+                        
+                        // Build your Helm chart
+                        sh 'helm package .'
+                        sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
+                    }
+                }
+            }
+        }
+        
+        stage('Apps Deploy') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s/mychart/templates') {
+                    script {
+                        sh 'kubectl apply -f infra-flask-deployment.yaml'
+                        sh 'kubectl apply -f flask-app-deployment.yaml'
                         sh 'kubectl get all --namespace flask-space'
                     }
                 }
