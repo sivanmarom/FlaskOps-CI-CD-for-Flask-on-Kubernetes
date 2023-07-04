@@ -11,9 +11,6 @@ pipeline {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {          
                     sh 'kubectl delete all --all --namespace flask-space'
-                    sh "kubectl delete configmap flask-app-config"
-                    sh "kubectl delete configmap infra-flask-config"
-
                 }
             }
         }

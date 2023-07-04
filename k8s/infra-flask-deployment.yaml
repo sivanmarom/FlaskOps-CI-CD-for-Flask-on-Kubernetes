@@ -1,8 +1,4 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: flask-space
----
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

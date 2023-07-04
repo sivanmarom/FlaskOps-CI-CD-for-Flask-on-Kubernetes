@@ -87,13 +87,15 @@ pipeline {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {
                     script {
                         def imageTag_flask = env.FLASK_APP_VERSION
-                        def imageTag_infra = env.INFRA_FLASK_VERSION                
-                        sh " kubectl create configmap flask-app-config --from-literal=image-tag=${imageTag_flask}"
-                        sh " kubectl create configmap infra-flask-config --from-literal=image-tag=${imageTag_infra}"
+                        def imageTag_infra = env.INFRA_FLASK_VERSION   
+                        sh "kubectl apply -f namespace.yaml"             
+                        sh " kubectl create configmap flask-app-config --from-literal=image-tag=${imageTag_flask} --namespace flask-space"
+                        sh " kubectl create configmap infra-flask-config --from-literal=image-tag=${imageTag_infra} --namespace flask-space"
+                        sh "kubectl get configmaps --namespace flask-space"
                         sh "cat infra-flask-deployment.yaml"
                         sh "cat flask-app-deployment.yaml"
-                        sh 'kubectl apply -f infra-flask-deployment.yaml'
-                        sh 'kubectl apply -f flask-app-deployment.yaml'
+                        sh 'kubectl apply -f infra-flask-deployment.yaml --namespace flask-space'
+                        sh 'kubectl apply -f flask-app-deployment.yaml --namespace flask-space'
                         sh 'kubectl get all --namespace flask-space'
                     }
                 }
