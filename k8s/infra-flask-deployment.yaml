@@ -3,14 +3,6 @@ kind: Namespace
 metadata:
   name: flask-space
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: infra-flask
-  namespace: flask-space
-data:
-  image-tag: PLACEHOLDER-INFRA
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,7 +25,7 @@ spec:
             - name: PLACEHOLDER-INFRA
               valueFrom:
                 configMapKeyRef:
-                  name: infra-flask
+                  name: infra-flask-config
                   key: image-tag
           ports:
             - containerPort: 5000
