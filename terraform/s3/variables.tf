@@ -1,11 +1,11 @@
 variable "infra_flask_bucket" {
   type    = string
-  default = "infra-flask"
+  default = "infra-flask-bucket"
 }
 
 variable "flask_app_bucket" {
   type    = string
-  default = "flask-app"
+  default = "flask-app-bucket"
 }
 
 variable "region" {
