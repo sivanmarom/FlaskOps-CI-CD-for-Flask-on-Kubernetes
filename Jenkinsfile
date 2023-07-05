@@ -35,7 +35,6 @@ pipeline {
                 wrap([$class: 'BuildUser', useGitAuthor: true]) {
                     script {
                         env.BUILD_USER = BUILD_USER
-                        echo ${env.BUILD_USER}
                     }
                 }
             }
