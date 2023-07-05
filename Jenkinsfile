@@ -97,7 +97,7 @@ pipeline {
                         sh "cat values.yaml"
                         // Build your Helm chart
                         sh 'helm package .'
-                        sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
+                        sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace apps-space -f values.yaml"
                     }
                 }
             }
@@ -109,7 +109,7 @@ pipeline {
                     script {
                         sh 'kubectl apply -f infra-flask-deployment.yaml'
                         sh 'kubectl apply -f flask-app-deployment.yaml'
-                        sh 'kubectl get all --namespace flask-space'
+                        sh 'kubectl get all --namespace apps-space'
                     }
                 }
             }
