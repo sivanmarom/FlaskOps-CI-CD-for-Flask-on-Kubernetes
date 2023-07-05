@@ -5,7 +5,7 @@ variable "infra_flask_bucket" {
 
 variable "flask_app_bucket" {
   type    = string
-  default = "flask-app-bucket"
+  default = "hello-user-bucket"
 }
 
 variable "region" {
