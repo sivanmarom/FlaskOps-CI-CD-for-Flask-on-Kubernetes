@@ -156,7 +156,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 resource "aws_eks_node_group" "eks_node_group" {
   for_each        = { for name in var.nodes_names : name => name }
   cluster_name    = var.eks_cluster_name
-  node_group_name = "flask-nodes"
+  node_group_name = "flask-nodes-${each.value}"
   node_role_arn   = aws_iam_role.eks_ec2_role.arn
   subnet_ids      = aws_subnet.eks_subnet[*].id
 
