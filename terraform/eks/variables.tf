@@ -37,7 +37,4 @@ variable "account_id" {
   default = "676000770422"
 }
 
-variable "nodes_names" {
-  type    = list(string)
-  default = ["nodeWorker", "flaskApp", "infraApp"]
-}
+
