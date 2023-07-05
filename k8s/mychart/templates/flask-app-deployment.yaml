@@ -17,7 +17,7 @@ spec:
         - name: flask-app
           image: "{{ .Values.image_flask.repository }}:{{ .Values.image_flask.tag }}"
           ports:
-            - containerPort: 5000
+            - containerPort: 5001
           resources:
             limits:
               cpu: "1"
@@ -37,5 +37,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5000
+      targetPort: 5001
   type: LoadBalancer
