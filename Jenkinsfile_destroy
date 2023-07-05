@@ -2,6 +2,22 @@ pipeline {
     agent any
     
     stages {
+        stage('destroy S3 Buckets') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/s3'){
+                    sh 'terraform init'
+                    sh 'terraform destroy --auto-approve'
+                }
+            }
+        }
+        stage('destroy dynamodb tables') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/dynamodb'){
+                    sh 'terraform init'
+                    sh 'terraform destroy --auto-approve'
+                }
+            }
+        }
         stage('Terminate and Delete Docker Containers') {
             steps {
                 sh 'docker rm -f $(docker ps -aq)'
@@ -22,8 +38,6 @@ pipeline {
                     sh 'terraform destroy --auto-approve'
                 }
             }
-        }
-        
-    
+        }   
     }
 }

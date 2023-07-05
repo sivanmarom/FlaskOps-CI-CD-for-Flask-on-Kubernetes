@@ -32,9 +32,9 @@ resource "aws_s3_bucket_public_access_block" "public_bucket" {
 
 
 output "flask_app_bucket_name" {
-  value = aws_s3_bucket.flask-app-bucket.id
+  value = aws_s3_bucket.flask-app-bucket.bucket
 }
 
 output "infra_flask_bucket_name" {
-  value = aws_s3_bucket.infra-flask-bucket.id
+  value = aws_s3_bucket.infra-flask-bucket.bucket
 }
