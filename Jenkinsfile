@@ -66,19 +66,21 @@ pipeline {
         stage('Create Dynamodb Tables') {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/dynamodb') {
-                    sh 'terraform init'
-                    sh 'terraform apply --auto-approve'
+                    script{
+                        sh 'terraform init'
+                        sh 'terraform apply --auto-approve'
 
-                    // Retrieve the table names
-                    def flaskAppTableName = sh(script: 'terraform output -raw flask_app_table_name', returnStdout: true).trim()
-                    def infraFlaskTableName = sh(script: 'terraform output -raw infra_flask_table_name', returnStdout: true).trim()
+                        // Retrieve the table names
+                        def flaskAppTableName = sh(script: 'terraform output -raw flask_app_table_name', returnStdout: true).trim()
+                        def infraFlaskTableName = sh(script: 'terraform output -raw infra_flask_table_name', returnStdout: true).trim()
 
-                    // Set environment variables with the table names
-                    env.FLASK_APP_TABLE_NAME = flaskAppTableName
-                    env.INFRA_FLASK_TABLE_NAME = infraFlaskTableName
+                        // Set environment variables with the table names
+                        env.FLASK_APP_TABLE_NAME = flaskAppTableName
+                        env.INFRA_FLASK_TABLE_NAME = infraFlaskTableName
 
-                    echo "Flask App Table Name: ${env.FLASK_APP_TABLE_NAME}"
-                    echo "Infra Flask Table Name: ${env.INFRA_FLASK_TABLE_NAME}"
+                        echo "Flask App Table Name: ${env.FLASK_APP_TABLE_NAME}"
+                        echo "Infra Flask Table Name: ${env.INFRA_FLASK_TABLE_NAME}"
+                    }
                 }
             }
         }
