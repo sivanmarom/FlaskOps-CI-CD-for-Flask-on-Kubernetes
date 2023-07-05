@@ -25,6 +25,8 @@ spec:
             requests:
               cpu: "0.5"
               memory: "512Mi"
+      nodeSelector:
+        flaskApp: "true"
 ---
 apiVersion: v1
 kind: Service
