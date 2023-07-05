@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "flask-app-bucket" {
     Name = var.flask_app_bucket
   }
 }
-resource "aws_s3_bucket_public_access_block" "public_bucket" {
+resource "aws_s3_bucket_public_access_block" "public_bucket_flask" {
   bucket                  = aws_s3_bucket.flask-app-bucket.id
   block_public_acls       = false
   block_public_policy     = false
@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "infra-flask-bucket" {
     Name = var.infra_flask_bucket
   }
 }
-resource "aws_s3_bucket_public_access_block" "public_bucket" {
+resource "aws_s3_bucket_public_access_block" "public_bucket_infra" {
   bucket                  = aws_s3_bucket.infra-flask-bucket.id
   block_public_acls       = false
   block_public_policy     = false

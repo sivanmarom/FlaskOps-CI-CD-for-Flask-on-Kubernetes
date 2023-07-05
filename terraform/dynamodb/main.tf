@@ -36,7 +36,7 @@ resource "aws_dynamodb_table" "flask-app-table" {
 }
 
 
-resource "aws_dynamodb_table" "flask-app-table" {
+resource "aws_dynamodb_table" "infra_flask_table" {
   name         = var.infra_flask_table
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = var.user_col
