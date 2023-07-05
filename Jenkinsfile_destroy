@@ -9,8 +9,9 @@ pipeline {
         }
         stage('delete namespace') {
             steps {
-                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {          
-                    sh 'kubectl delete all --all --namespace flask-space'
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {   
+                    sh 'kubectl delete configmap --all --all-namespaces'       
+                    sh 'kubectl delete all --all --namespace apps-space'
                 }
             }
         }
