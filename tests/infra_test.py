@@ -1,7 +1,7 @@
 import time
 import pytest
 from selenium.webdriver.common.by import By
-from BaseClass_flask import BaseClass
+from BaseClass_infra import BaseClass
 
 
 @pytest.mark.usefixtures("setup")
