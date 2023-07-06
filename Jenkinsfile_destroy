@@ -5,8 +5,8 @@ pipeline {
         stage('destroy S3 Buckets') {
             steps {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/s3'){
-                    // sh "aws s3 rm  s3://sivan-flask-bucket/flask_report.html"
-                    // sh "aws s3 rm  s3://infra-flask-bucket/infra_report.html"
+                    sh "aws s3 rm  s3://sivan-flask-bucket/flask_report.html"
+                    sh "aws s3 rm  s3://infra-flask-bucket/infra_report.html"
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
                 }

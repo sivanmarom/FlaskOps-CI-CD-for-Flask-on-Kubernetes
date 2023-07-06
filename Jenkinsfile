@@ -141,10 +141,10 @@ pipeline {
                 dir('/var/lib/jenkins/workspace/deployment/final_project/tests') {
                     script {
                         withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh "aws dynamodb put-item --table-name env.INFRA_FLASK_TABLE_NAME --item \"{\\\"User\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"Timestamp\\\": {\\\"S\\\": \\\"${env.INFRA_TIMESTAMP}\\\"}, \\\"Message\\\": {\\\"S\\\": \\\"${env.INFRA_MESSAGE}\\\"}}\""
+                            sh "aws dynamodb put-item --table-name ${env.INFRA_FLASK_TABLE_NAME} --item \"{\\\"User\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"Timestamp\\\": {\\\"S\\\": \\\"${env.INFRA_TIMESTAMP}\\\"}, \\\"Message\\\": {\\\"S\\\": \\\"${env.INFRA_MESSAGE}\\\"}}\""
                         }
                         withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-                            sh "aws dynamodb put-item --table-name env.FLASK_APP_TABLE_NAME --item \"{\\\"User\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"Timestamp\\\": {\\\"S\\\": \\\"${env.FLASK_TIMESTAMP}\\\"}, \\\"Message\\\": {\\\"S\\\": \\\"${env.FLASK_MESSAGE}\\\"}}\""
+                            sh "aws dynamodb put-item --table-name ${env.FLASK_APP_TABLE_NAME} --item \"{\\\"User\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"Timestamp\\\": {\\\"S\\\": \\\"${env.FLASK_TIMESTAMP}\\\"}, \\\"Message\\\": {\\\"S\\\": \\\"${env.FLASK_MESSAGE}\\\"}}\""
                         }
                     }
                 }
