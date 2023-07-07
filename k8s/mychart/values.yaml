@@ -2,6 +2,3 @@ image_flask:
   repository: sivanmarom/flask_app
   tag: latest
 
-image_infra:
-  repository: sivanmarom/infra_flask
-  tag: latest

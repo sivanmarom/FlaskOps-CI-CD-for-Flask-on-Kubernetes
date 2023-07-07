@@ -1,0 +1,32 @@
+pipeline {
+      agent {
+        label "final"
+    }
+
+    stages {
+        stage('Hello') {
+          steps {
+            sh "echo \${image_name}"
+          }
+        }
+
+        // stage('git clone') {
+        //     steps {
+        //         sh 'rm -rf *'
+        //         sh 'git clone git@github.com:sivanmarom/final_project.git'
+        //     }
+        // }
+        // stage('create EKS cluster') {
+        //     steps {
+        //         dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
+        //             sh 'terraform init'
+        //             sh 'terraform apply --auto-approve'
+        //             sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
+        //             sh 'kubectl get nodes'
+        //         }
+        //     }
+        // }
+    
+    }
+}
+

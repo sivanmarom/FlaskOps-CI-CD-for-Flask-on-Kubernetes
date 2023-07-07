@@ -1,12 +1,17 @@
 import subprocess
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 import boto3
 import time
 import jenkins
 import os
+from werkzeug.utils import secure_filename
+import tempfile
 app = Flask(__name__)
 my_users = []
+
+secret_key = os.urandom(24)
+app.secret_key = secret_key
 
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -48,6 +53,15 @@ def create_iam_user():
         launched = launch_instance()
         return render_template("aws.html", instances=launched)
     return render_template("aws.html")
+
+
+@app.route('/user_created')
+def user_information():
+    return render_template('iam_creation_user_result.html',
+                           username=request.args.get('username'),
+                           password=request.args.get('password'),
+                           access_key_id=request.args.get('access_key_id'),
+                           secret_access_key=request.args.get('secret_access_key'))
 
 
 def launch_instance():
@@ -95,25 +109,39 @@ def launch_instance():
     return instances
 
 
-@app.route('/user_created')
-def user_information():
-    return render_template('iam_creation_user_result.html',
-                           username=request.args.get('username'),
-                           password=request.args.get('password'),
-                           access_key_id=request.args.get('access_key_id'),
-                           secret_access_key=request.args.get('secret_access_key'))
-
+# working
 
 @app.route('/docker_image', methods=['POST', 'GET'])
 def create_docker_image():
     if request.method == 'POST':
         image_name = request.form.get('image_name')
-        subprocess.run(['docker', 'build', '-t', f'{image_name}', '.'])
-        subprocess.run(
-            ['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
-        subprocess.run(['docker', 'login', '-u', 'sivanmarom', '-p', ''])
-        subprocess.run(['docker', 'push', f'sivanmarom/test:{image_name}'])
-        return f'Docker image {image_name} created and pushed to Docker Hub'
+        session['image_name'] = image_name  # Store image_name in session
+        dockerfile = request.files['dockerfile']
+        requirements = request.files['requirements']
+        app_file = request.files['app']
+
+        # Create a temporary directory to save the uploaded files
+        with tempfile.TemporaryDirectory() as temp_dir:
+            dockerfile_path = os.path.join(
+                temp_dir, secure_filename(dockerfile.filename))
+            requirements_path = os.path.join(
+                temp_dir, secure_filename(requirements.filename))
+            app_path = os.path.join(
+                temp_dir, secure_filename(app_file.filename))
+
+            dockerfile.save(dockerfile_path)
+            requirements.save(requirements_path)
+            app_file.save(app_path)
+
+            subprocess.run(
+                ['docker', 'build', '-t', f'{image_name}', '-f', dockerfile_path, '.'])
+            subprocess.run(
+                ['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
+            subprocess.run(
+                ['docker', 'login', '-u', 'sivanmarom', '-p', 'sm5670589'])
+            subprocess.run(['docker', 'push', f'sivanmarom/test:{image_name}'])
+
+        return redirect(url_for('create_jenkins_job_pipeline'))
     else:
         return render_template('docker_image.html')
 
@@ -138,6 +166,8 @@ def create_jenkins_user():
 
     return render_template('jenkins_user.html')
 
+# working
+
 
 @app.route('/jenkins_job/freestyle', methods=['POST', 'GET'])
 def create_jenkins_job_freestyle():
@@ -146,7 +176,7 @@ def create_jenkins_job_freestyle():
         jenkins_url = request.form.get("jenkins_url")
         server = jenkins.Jenkins(
             jenkins_url, username='sivan_marom', password='1234')
-        with open('templates/jenkins_job.xml', 'r') as f:
+        with open('infra_flask_app/templates/jenkins_job.xml', 'r') as f:
             job_config_xml = f.read()
         server.create_job(job_name, job_config_xml)
         server.build_job(job_name)
@@ -158,18 +188,21 @@ def create_jenkins_job_freestyle():
 def create_jenkins_job_pipeline():
     if request.method == "POST":
         job_name = request.form.get("job2")
-        server = jenkins.Jenkins(
-            'http://23.22.159.73:8080/', username='sivan_marom', password='1234')
+        jenkins_url = request.form.get("jenkins_url")
+        image_name = session.get('image_name')
+        image_dict = {'image_name': image_name}
         workspace = request.form.get('workspace')
         if workspace == 'Testing':
-            with open('templates/jenkins_job_pipeline.xml', 'r') as f:
+            with open('infra_flask_app/templates/jenkins_job_pipeline.xml', 'r') as f:
                 job_config_xml = f.read()
         elif workspace == 'Production':
-            with open('templates/jenkins_job_pipeline_production.xml', 'r') as f:
+            with open('infra_flask_app/templates/jenkins_job_pipeline_production.xml', 'r') as f:
                 job_config_xml = f.read()
+        server = jenkins.Jenkins(
+            jenkins_url, username='sivan_marom', password='1234')
         server.create_job(job_name, job_config_xml)
-        server.build_job(job_name)
-        return "job created successfully"
+        server.build_job(job_name, parameters=image_dict)
+        return "Job created successfully"
     return render_template('jenkins_job.html')
 
 

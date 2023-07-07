@@ -8,10 +8,6 @@ variable "flask_app_table" {
   default = "flask-app-table"
 }
 
-variable "infra_flask_table" {
-  type    = string
-  default = "infra-flask-table"
-}
 
 variable "user_col" {
   type    = string

@@ -25,10 +25,17 @@
         <h2>Create Pipeline Job</h2>
         <label for="job2">Job Name</label>
         <input type="text" id="job2" name="job2" />
+        <label for="jenkins_url">Jenkins_url</label>
+        <input type="text" id="jenkins_url" name="jenkins_url" />
         <select class="select" name="workspace" id="workspace" required>
           <option value="Testing">Testing workspace</option>
           <option value="Production">Production workspace</option>
         </select>
+        <input
+          type="hidden"
+          name="image_name"
+          value="{{ session.get('image_name') }}"
+        />
         <button class="submit" type="submit">Create Job</button>
       </form>
     </div>

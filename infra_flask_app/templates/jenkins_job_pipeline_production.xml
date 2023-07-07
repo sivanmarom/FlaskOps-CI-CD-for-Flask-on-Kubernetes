@@ -1,73 +1,24 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<flow-definition plugin="workflow-job@1292.v27d8cc3e2602">
-<actions>
-<org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2131.vb_9788088fdb_5"/>
-<org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2131.vb_9788088fdb_5">
-<jobProperties/>
-<triggers/>
-<parameters/>
-<options/>
-</org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
-</actions>
-<description>A sample Jenkins pipeline</description>
-<keepDependencies>false</keepDependencies>
-<properties>
-<hudson.model.ParametersDefinitionProperty>
-<parameterDefinitions>
-<org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition plugin="nodelabelparameter@1.11.0">
-<name>node</name>
-<allowedSlaves>
-<string>prod1</string>
-<string>prod2</string>
-</allowedSlaves>
-<defaultSlaves>
-<string>prod1</string>
-<string>prod2</string>
-</defaultSlaves>
-<triggerIfResult>allowMultiSelectionForConcurrentBuilds</triggerIfResult>
-<allowMultiNodeSelection>true</allowMultiNodeSelection>
-<triggerConcurrentBuilds>true</triggerConcurrentBuilds>
-<ignoreOfflineNodes>false</ignoreOfflineNodes>
-<nodeEligibility class="org.jvnet.jenkins.plugins.nodelabelparameter.node.AllNodeEligibility"/>
-</org.jvnet.jenkins.plugins.nodelabelparameter.NodeParameterDefinition>
-</parameterDefinitions>
-</hudson.model.ParametersDefinitionProperty>
-<org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-<triggers>
-<jenkins.triggers.ReverseBuildTrigger>
-<spec/>
-<upstreamProjects>Test, </upstreamProjects>
-<threshold>
-<name>SUCCESS</name>
-<ordinal>0</ordinal>
-<color>BLUE</color>
-<completeBuild>true</completeBuild>
-</threshold>
-</jenkins.triggers.ReverseBuildTrigger>
-</triggers>
-</org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
-</properties>
-<definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@3659.v582dc37621d8">
-<scm class="hudson.plugins.git.GitSCM" plugin="git@5.0.1">
-<configVersion>2</configVersion>
-<userRemoteConfigs>
-<hudson.plugins.git.UserRemoteConfig>
-<url>https://github.com/sivanmarom/project-flask-app.git</url>
-<credentialsId>git-credentials</credentialsId>
-</hudson.plugins.git.UserRemoteConfig>
-</userRemoteConfigs>
-<branches>
-<hudson.plugins.git.BranchSpec>
-<name>*/main</name>
-</hudson.plugins.git.BranchSpec>
-</branches>
-<doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-<submoduleCfg class="empty-list"/>
-<extensions/>
-</scm>
-<scriptPath>production/Jenkinsfile</scriptPath>
-<lightweight>false</lightweight>
-</definition>
-<triggers/>
-<disabled>false</disabled>
-</flow-definition>
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <description>Job created from Flask app</description>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>IMAGE_NAME</name>
+          <description>Docker image name</description>
+          <defaultValue>{IMAGE_NAME}</defaultValue>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>
+        # Your build commands here
+        echo "Building Docker image: $IMAGE_NAME"
+        # ...
+      </command>
+    </hudson.tasks.Shell>
+  </builders>
+</project>
