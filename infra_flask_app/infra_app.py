@@ -193,10 +193,10 @@ def create_jenkins_job_pipeline():
         image_dict = {'image_name': image_name}
         workspace = request.form.get('workspace')
         if workspace == 'Testing':
-            with open('infra_flask_app/templates/jenkins_job_pipeline.xml', 'r') as f:
+            with open('infra_flask_app/templates/jenkins_job_test.xml', 'r') as f:
                 job_config_xml = f.read()
         elif workspace == 'Production':
-            with open('infra_flask_app/templates/jenkins_job_pipeline_production.xml', 'r') as f:
+            with open('infra_flask_app/templates/jenkins_job_pipeline_deploy.xml', 'r') as f:
                 job_config_xml = f.read()
         server = jenkins.Jenkins(
             jenkins_url, username='sivan_marom', password='1234')

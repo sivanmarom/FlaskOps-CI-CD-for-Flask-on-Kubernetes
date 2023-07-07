@@ -1,0 +1,49 @@
+{% comment %} check credentials ids, and path of jenkinsfile and check if it works! {% endcomment %}
+
+<flow-definition plugin="workflow-job@1316.vd2290d3341a_f">
+    <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2141.v5402e818a_779"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2141.v5402e818a_779">
+    <jobProperties/>
+    <triggers/>
+    <parameters/>
+    <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+    </actions>
+    <description/>
+    <keepDependencies>false</keepDependencies>
+    <properties>
+    <hudson.model.ParametersDefinitionProperty>
+    <parameterDefinitions>
+    <hudson.model.StringParameterDefinition>
+    <name>image_name</name>
+    <defaultValue>{image_name}</defaultValue>
+    <trim>false</trim>
+    </hudson.model.StringParameterDefinition>
+    </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    </properties>
+    <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@3697.vb_470e454c232">
+      <scm class="hudson.plugins.git.GitSCM" plugin="git@4.12.0">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+          <hudson.plugins.git.UserRemoteConfig>
+            <url>https://github.com/sivanmarom/final_project.git</url>
+            <credentialsId>github_credentials</credentialsId>
+          </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+          <hudson.plugins.git.BranchSpec>
+            <name>*/main</name>
+          </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions/>
+      </scm>
+      <scriptPath>jenkins_files/Jenkinsfile_deploy</scriptPath>
+      <lightweight>true</lightweight>
+    </definition>
+    <triggers/>
+    <disabled>false</disabled>
+    </flow-definition>

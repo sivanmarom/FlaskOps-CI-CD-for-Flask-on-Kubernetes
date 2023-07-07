@@ -1,4 +1,4 @@
-{% comment %} change github repo, add credentials and check if it works! {% endcomment %}
+{% comment %} check credentials ids, and path of jenkinsfile and check if it works! {% endcomment %}
 
 <flow-definition plugin="workflow-job@1316.vd2290d3341a_f">
   <actions>
@@ -28,20 +28,20 @@
       <configVersion>2</configVersion>
       <userRemoteConfigs>
         <hudson.plugins.git.UserRemoteConfig>
-          <url>https://github.com/your-username/your-repo.git</url>
-          <credentialsId>your-github-credentials-id</credentialsId>
+          <url>https://github.com/sivanmarom/final_project.git</url>
+          <credentialsId>github_credentials</credentialsId>
         </hudson.plugins.git.UserRemoteConfig>
       </userRemoteConfigs>
       <branches>
         <hudson.plugins.git.BranchSpec>
-          <name>*/master</name>
+          <name>*/main</name>
         </hudson.plugins.git.BranchSpec>
       </branches>
       <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
       <submoduleCfg class="list"/>
       <extensions/>
     </scm>
-    <scriptPath>Jenkinsfile</scriptPath>
+    <scriptPath>jenkins_files/Jenkinsfile_test</scriptPath>
     <lightweight>true</lightweight>
   </definition>
   <triggers/>
