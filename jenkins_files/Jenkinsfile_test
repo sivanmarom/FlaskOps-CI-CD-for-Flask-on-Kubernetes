@@ -10,11 +10,12 @@ pipeline {
           }
         }
 
-      stage('git clone') {
+    stage('git clone') {
     steps {
-        checkout([$class: 'GitSCM', branches: [[name: '*/main']], 
+        checkout([$class: 'GitSCM', branches: [[name: '*/main']],
                  userRemoteConfigs: [[url: 'https://github.com/sivanmarom/final_project.git']],
-                 credentialsId: 'github2'])
+                 credentialsId: 'github2',
+                 extensions: [[$class: 'CloneOption', noTags: true]]])
     }
 }
 
