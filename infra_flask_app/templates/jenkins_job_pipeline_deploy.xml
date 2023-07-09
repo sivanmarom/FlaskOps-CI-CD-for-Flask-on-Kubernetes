@@ -39,7 +39,7 @@
   <submoduleCfg class="empty-list"/>
   <extensions/>
   </scm>
-  <scriptPath>jenkins_files/Jenkinsfile_test</scriptPath>
+  <scriptPath>jenkins_files/Jenkinsfile_deploy</scriptPath>
   <lightweight>true</lightweight>
   </definition>
   <triggers/>
