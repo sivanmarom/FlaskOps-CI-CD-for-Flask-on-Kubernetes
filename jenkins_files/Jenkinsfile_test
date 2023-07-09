@@ -13,7 +13,7 @@ pipeline {
         stage('git clone') {
             steps {
                 sh 'rm -rf *'
-                sh 'git clone git@github.com:sivanmarom/final_project.git'
+                git credentialsId:'github2', url: 'https://github.com/sivanmarom/final_project.git' 
             }
         }
         // stage("build user") {
