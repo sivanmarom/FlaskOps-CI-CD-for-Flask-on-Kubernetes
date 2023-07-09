@@ -11,13 +11,17 @@ pipeline {
         }
 
         stage('git clone') {
-            steps {
-                sh 'rm -rf *'
-                withCredentials([string(credentialsId: 'github2', variable: 'GITHUB_TOKEN')]) {
-                sh 'git clone git@github.com:sivanmarom/final_project.git'
-            }
+    steps {
+        sh 'rm -rf *'
+        withCredentials([
+            usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
+        ]) {
+            sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
+            sh 'git clone https://github.com/sivanmarom/final_project.git'
         }
-        }
+    }
+}
+
         // stage("build user") {
         //     steps {
         //         wrap([$class: 'BuildUser', useGitAuthor: true]) {
