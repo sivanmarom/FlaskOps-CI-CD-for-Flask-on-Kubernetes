@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('destroy S3 Buckets') {
             steps {
-                dir('/var/lib/jenkins/workspace/testing/final_project/terraform/s3'){
+                dir('home/ubuntu/workspace/testing/final_project/terraform/s3'){
                     sh "aws s3 rm  s3://sivan-flask-bucket/flask_report.html"
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
@@ -15,7 +15,7 @@ pipeline {
         }
         stage('destroy dynamodb tables') {
             steps {
-                dir('/var/lib/jenkins/workspace/testing/final_project/terraform/dynamodb'){
+                dir('/home/ubuntu/workspace/testing/final_project/terraform/dynamodb'){
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
                 }
