@@ -4,28 +4,28 @@ pipeline {
     }
 
     stages {
-        stage('Hello') {
-          steps {
-            sh "echo \${image_name}"
-          }
-        }
 
-        // stage('git clone') {
-        //     steps {
-        //         sh 'rm -rf *'
-        //         sh 'git clone git@github.com:sivanmarom/final_project.git'
-        //     }
-        // }
-        // stage('create EKS cluster') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
-        //             sh 'terraform init'
-        //             sh 'terraform apply --auto-approve'
-        //             sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
-        //             sh 'kubectl get nodes'
-        //         }
-        //     }
-        // }
+         stage('git clone') {
+    steps {
+        sh 'rm -rf *'
+        withCredentials([
+            usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
+        ]) {
+            sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
+            sh 'git clone https://github.com/sivanmarom/final_project.git'
+        }
+    }
+}
+        stage('create EKS cluster') {
+            steps {
+                dir('/home/ubuntu/workspace/cluster-launch/final_project/terraform/eks') {
+                    sh 'terraform init'
+                    sh 'terraform apply --auto-approve'
+                    sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
+                    sh 'kubectl get nodes'
+                }
+            }
+        }
     
     }
 }

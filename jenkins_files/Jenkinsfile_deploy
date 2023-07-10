@@ -10,43 +10,48 @@ pipeline {
           }
         }
 
-        // stage('git clone') {
-        //     steps {
-        //         sh 'rm -rf *'
-        //         sh 'git clone git@github.com:sivanmarom/final_project.git'
-        //     }
-        // }
+  stage('git clone') {
+    steps {
+        sh 'rm -rf *'
+        withCredentials([
+            usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
+        ]) {
+            sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
+            sh 'git clone https://github.com/sivanmarom/final_project.git'
+        }
+    }
+}
 
-        // stage('Helm Chart') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/k8s/mychart') {
-        //             script {
-                          // sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
-        //                sh 'kubectl get nodes'
+        stage('Helm Chart') {
+            steps {
+                dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart') {
+                    script {
+                          sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
+                       sh 'kubectl get nodes'
 
-        //                 sh 'kubectl apply -f namespace.yaml'
+                        sh 'kubectl apply -f namespace.yaml'
 
-        //                 // Update values.yaml with image tag parameters
-        //                 sh "sed -i 's/tag: latest/tag: ${image_name}/' values.yaml"
-        //                 sh "cat values.yaml"
-        //                 // Build your Helm chart
-        //                 sh 'helm package .'
-        //                 sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace apps-space -f values.yaml"
-        //             }
-        //         }
-        //     }
-        // }
+                        // Update values.yaml with image tag parameters
+                        sh "sed -i 's/tag: latest/tag: ${image_name}/' values.yaml"
+                        sh "cat values.yaml"
+                        // Build your Helm chart
+                        sh 'helm package .'
+                        sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace apps-space -f values.yaml"
+                    }
+                }
+            }
+        }
 
-        // stage('Apps Deploy') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/k8s/mychart/templates') {
-        //             script {
-        //                 sh 'kubectl apply -f flask-app-deployment.yaml'
-        //                 sh 'kubectl get all --namespace apps-space'
-        //             }
-        //         }
-        //     }
-        // }        
+        stage('Apps Deploy') {
+            steps {
+                dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart/templates') {
+                    script {
+                        sh 'kubectl apply -f flask-app-deployment.yaml'
+                        sh 'kubectl get all --namespace apps-space'
+                    }
+                }
+            }
+        }        
     }
 }
 

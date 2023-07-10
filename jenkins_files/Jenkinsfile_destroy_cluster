@@ -1,0 +1,16 @@
+pipeline {
+      agent {
+        label "final"
+    }
+    
+    stages {
+        stage('destroy EKS cluster') {
+            steps {
+                dir('/home/ubuntu/workspace/cluster-launch/final_project/terraform/eks'){
+                    sh 'terraform init'
+                    sh 'terraform destroy --auto-approve'
+                }
+            }
+        }   
+    }
+}

@@ -7,18 +7,9 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ["localhost:9090"]
-  - job_name: "node-1"
-    scrape_interval: 15s
+  - job_name: 'flask-app'
     static_configs:
-      - targets: ["54.91.207.224:9100"]
-  - job_name: "node-2"
-    scrape_interval: 15s
-    static_configs:
-      - targets: ["3.93.231.214:9100"]
-  - job_name: "node-3"
-    scrape_interval: 15s
-    static_configs:
-      - targets: ["3.84.195.49:9100"]
+      - targets: ['flask-app.apps-space:5001']
  
 
   
