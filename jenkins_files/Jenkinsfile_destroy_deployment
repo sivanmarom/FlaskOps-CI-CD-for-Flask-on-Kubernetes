@@ -1,0 +1,16 @@
+pipeline {
+      agent {
+        label "final"
+    }
+    
+    stages {
+        stage('delete namespace') {
+            steps {
+                dir('/var/lib/jenkins/workspace/deployment/final_project/k8s') {   
+                    sh 'kubectl delete configmap --all --all-namespaces'       
+                    sh 'kubectl delete all --all --namespace apps-space'
+                }
+            }
+        }
+    }
+}
