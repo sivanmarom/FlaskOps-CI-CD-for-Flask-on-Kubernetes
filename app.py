@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app)
 my_users = []
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///project4.db'

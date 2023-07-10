@@ -13,8 +13,4 @@ services:
       - 3000:3000
     volumes:
       - ./grafana_data:/var/lib/grafana
-  node-exporter:
-    image: prom/node-exporter
-    ports:
-      - 9100:9100
-    restart: unless-stopped
+
