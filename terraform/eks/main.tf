@@ -175,15 +175,6 @@ resource "aws_eks_node_group" "eks_node_group" {
     timeout     = "10m"
   }
 
-  provisioner "remote-exec" {
-    inline = [
-      "wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz",
-      "tar xvf node_exporter-1.3.1.linux-amd64.tar.gz",
-      "cd node_exporter-1.3.1.linux-amd64",
-      "sudo cp node_exporter /usr/local/bin",
-      "./node_exporter"
-    ]
-  }
   depends_on = [
     aws_eks_cluster.eks_cluster
   ]
