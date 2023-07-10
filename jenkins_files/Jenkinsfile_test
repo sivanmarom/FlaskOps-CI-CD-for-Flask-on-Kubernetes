@@ -22,111 +22,110 @@ pipeline {
     }
 }
 
-        // stage("build user") {
-        //     steps {
-        //         wrap([$class: 'BuildUser', useGitAuthor: true]) {
-        //             script {
-        //                 env.BUILD_USER = BUILD_USER
-        //                 echo "Build user: ${env.BUILD_USER}"
-        //             }
-        //         }
-        //     }
-        // }
+        stage("build user") {
+            steps {
+                wrap([$class: 'BuildUser', useGitAuthor: true]) {
+                    script {
+                        env.BUILD_USER = BUILD_USER
+                        echo "Build user: ${env.BUILD_USER}"
+                    }
+                }
+            }
+        }
 
-        // stage('Create S3 Buckets') {
-        //     steps {
-        //         dir('/home/ubuntu/workspace/testing/final_project/terraform/s3') {
-        //             script {
-        //                 sh 'terraform init'
-        //                 sh 'terraform apply --auto-approve'
+        stage('Create S3 Buckets') {
+            steps {
+                dir('/home/ubuntu/workspace/testing/final_project/terraform/s3') {
+                    script {
+                        sh 'terraform init'
+                        sh 'terraform apply --auto-approve'
 
-        //                 // Retrieve the bucket names
-        //                 def flaskAppBucketName = sh(script: 'terraform output -raw flask_app_bucket_name', returnStdout: true).trim()
+                        // Retrieve the bucket names
+                        def flaskAppBucketName = sh(script: 'terraform output -raw flask_app_bucket_name', returnStdout: true).trim()
 
-        //                 // Set environment variables with the bucket names
-        //                 env.FLASK_APP_BUCKET_NAME = flaskAppBucketName
+                        // Set environment variables with the bucket names
+                        env.FLASK_APP_BUCKET_NAME = flaskAppBucketName
                         
 
-        //                 echo "Flask App Bucket Name: ${env.FLASK_APP_BUCKET_NAME}"
+                        echo "Flask App Bucket Name: ${env.FLASK_APP_BUCKET_NAME}"
                         
-        //             }
-        //         }
-        //     }
-        // }
+                    }
+                }
+            }
+        }
 
-        // stage('Create Dynamodb Tables') {
-        //     steps {
-        //         dir('/home/ubuntu/workspace/testing/final_project/terraform/dynamodb') {
-        //             script{
-        //                 sh 'terraform init'
-        //                 sh 'terraform apply --auto-approve'
+        stage('Create Dynamodb Tables') {
+            steps {
+                dir('/home/ubuntu/workspace/testing/final_project/terraform/dynamodb') {
+                    script{
+                        sh 'terraform init'
+                        sh 'terraform apply --auto-approve'
 
-        //                 // Retrieve the table names
-        //                 def flaskAppTableName = sh(script: 'terraform output -raw flask_app_table_name', returnStdout: true).trim()
+                        // Retrieve the table names
+                        def flaskAppTableName = sh(script: 'terraform output -raw flask_app_table_name', returnStdout: true).trim()
 
-        //                 // Set environment variables with the table names
-        //                 env.FLASK_APP_TABLE_NAME = flaskAppTableName
+                        // Set environment variables with the table names
+                        env.FLASK_APP_TABLE_NAME = flaskAppTableName
                      
 
-        //                 echo "Flask App Table Name: ${env.FLASK_APP_TABLE_NAME}"
+                        echo "Flask App Table Name: ${env.FLASK_APP_TABLE_NAME}"
                        
-        //             }
-        //         }
-        //     }
-        // }
+                    }
+                }
+            }
+        }
 
         stage('build and test flask_app') {
             steps {
                 dir('/home/ubuntu/workspace/testing/final_project') {
-                    sh "docker ps"
-                    // sh "docker build -t flask_app_image:${image_name} ."
-                    // sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${image_name}"
+                    sh "docker build -t flask_app_image:${image_name} ."
+                    sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${image_name}"
                 }
-                // dir('/var/lib/jenkins/workspace/deployment/final_project/tests'){
-                //     script{
-                //         sh 'pytest flask_test.py::Test_class --html=flask_report.html'
-                //         def log_entry_flask = sh(script: 'python3.8 parse_log_flask.py', returnStdout: true).trim()
-                //         def (timestamp, message) = log_entry_flask.split(',')
-                //         env.FLASK_TIMESTAMP = timestamp.trim()
-                //         env.FLASK_MESSAGE = message.trim().replaceAll('"', '\\"')             
-                //         echo "flask Timestamp: ${env.FLASK_TIMESTAMP}"
-                //         echo "flask Message: ${env.FLASK_MESSAGE}"
-                //     }
-                // }
+                dir('/var/lib/jenkins/workspace/deployment/final_project/tests'){
+                    script{
+                        sh 'pytest flask_test.py::Test_class --html=flask_report.html'
+                        def log_entry_flask = sh(script: 'python3.8 parse_log_flask.py', returnStdout: true).trim()
+                        def (timestamp, message) = log_entry_flask.split(',')
+                        env.FLASK_TIMESTAMP = timestamp.trim()
+                        env.FLASK_MESSAGE = message.trim().replaceAll('"', '\\"')             
+                        echo "flask Timestamp: ${env.FLASK_TIMESTAMP}"
+                        echo "flask Message: ${env.FLASK_MESSAGE}"
+                    }
+                }
             }
         }
 
-        // stage('upload to s3 bucket') {
-        //     steps {
-        //         dir('/home/ubuntu/workspace/testing/final_project/tests') {
-        //             withAWS(credentials: 'aws-credentials') {
-        //                 sh "aws s3 cp flask_report.html s3://${env.FLASK_APP_BUCKET_NAME}"
-        //             }
-        //         }
-        //     }
-        // }
+        stage('upload to s3 bucket') {
+            steps {
+                dir('/home/ubuntu/workspace/testing/final_project/tests') {
+                    withAWS(credentials: 'aws-credentials') {
+                        sh "aws s3 cp flask_report.html s3://${env.FLASK_APP_BUCKET_NAME}"
+                    }
+                }
+            }
+        }
 
-        // stage('Upload to dynamodb') {
-        //     steps {
-        //         dir('/home/ubuntu/workspace/testing/final_project/tests') {
-        //             script {
-        //                 withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
-        //                     sh "aws dynamodb put-item --table-name ${env.FLASK_APP_TABLE_NAME} --item \"{\\\"User\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"Timestamp\\\": {\\\"S\\\": \\\"${env.FLASK_TIMESTAMP}\\\"}, \\\"Message\\\": {\\\"S\\\": \\\"${env.FLASK_MESSAGE}\\\"}}\""
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Upload to dynamodb') {
+            steps {
+                dir('/home/ubuntu/workspace/testing/final_project/tests') {
+                    script {
+                        withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
+                            sh "aws dynamodb put-item --table-name ${env.FLASK_APP_TABLE_NAME} --item \"{\\\"User\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"Timestamp\\\": {\\\"S\\\": \\\"${env.FLASK_TIMESTAMP}\\\"}, \\\"Message\\\": {\\\"S\\\": \\\"${env.FLASK_MESSAGE}\\\"}}\""
+                        }
+                    }
+                }
+            }
+        }
 
-        // stage('push to dockerhub flask_app') {
-        //     steps {
-        //      withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-        //             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-        //         sh "docker tag flask_app_image:${image_name} sivanmarom/flask_app:${image_name}"
-        //         sh "docker push sivanmarom/flask_app:${image_name}"
-        //     }
-        // }
-        // }
+        stage('push to dockerhub flask_app') {
+            steps {
+             withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                sh "docker tag flask_app_image:${image_name} sivanmarom/flask_app:${image_name}"
+                sh "docker push sivanmarom/flask_app:${image_name}"
+            }
+        }
+        }
 
         // stage('create EKS cluster') {
         //     steps {
