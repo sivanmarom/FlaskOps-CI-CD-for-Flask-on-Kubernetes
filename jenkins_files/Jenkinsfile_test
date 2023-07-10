@@ -81,7 +81,7 @@ pipeline {
                     sh "docker build -t flask_app_image:${image_name} ."
                     sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${image_name}"
                 }
-                dir('/var/lib/jenkins/workspace/deployment/final_project/tests'){
+                dir('/home/ubuntu/workspace/testing/final_project/tests'){
                     script{
                         sh 'pytest flask_test.py::Test_class --html=flask_report.html'
                         def log_entry_flask = sh(script: 'python3.8 parse_log_flask.py', returnStdout: true).trim()
