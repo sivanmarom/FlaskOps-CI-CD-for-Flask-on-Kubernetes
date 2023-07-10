@@ -6,7 +6,9 @@ pipeline {
     stages {
         stage('echo'){
             steps{
+                dir('home/ubuntu/workspace/testing/final_project/terraform/s3'){
                 sh 'echo destroy'
+                }
             }
         }
         stage('destroy S3 Buckets') {
