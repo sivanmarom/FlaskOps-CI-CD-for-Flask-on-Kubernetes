@@ -17,9 +17,13 @@ variable "sg_name" {
   type    = string
   default = "eks-cluster-sg"
 }
-variable "eks_cluster_name" {
+variable "infra_cluster_name" {
   type    = string
-  default = "eks-cluster"
+  default = "infra-cluster"
+}
+variable "flask_cluster_name" {
+  type    = string
+  default = "flask-cluster"
 }
 #mabey upgrade version
 variable "eks_cluster_version" {

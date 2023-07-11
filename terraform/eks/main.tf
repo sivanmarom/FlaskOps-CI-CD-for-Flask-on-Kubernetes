@@ -134,8 +134,8 @@ resource "aws_iam_role_policy_attachment" "ecr_readonly_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_eks_cluster" "eks_cluster" {
-  name     = var.eks_cluster_name
+resource "aws_eks_cluster" "flask_cluster" {
+  name     = var.flask_cluster_name
   role_arn = aws_iam_role.eks_ec2_role.arn
   version  = var.eks_cluster_version
 
@@ -153,8 +153,8 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 }
 
-resource "aws_eks_node_group" "eks_node_group" {
-  cluster_name    = var.eks_cluster_name
+resource "aws_eks_node_group" "flask_node_group" {
+  cluster_name    = var.flask_cluster_name
   node_group_name = "flask-nodes"
   node_role_arn   = aws_iam_role.eks_ec2_role.arn
   subnet_ids      = aws_subnet.eks_subnet[*].id
@@ -176,6 +176,62 @@ resource "aws_eks_node_group" "eks_node_group" {
   }
 
   depends_on = [
-    aws_eks_cluster.eks_cluster
+    aws_eks_cluster.flask_cluster
   ]
+}
+
+
+resource "aws_eks_cluster" "infra_cluster" {
+  name     = var.infra_cluster_name
+  role_arn = aws_iam_role.eks_ec2_role.arn
+  version  = var.eks_cluster_version
+
+  vpc_config {
+    subnet_ids         = aws_subnet.eks_subnet[*].id
+    security_group_ids = [aws_security_group.eks_cluster_sg.id]
+  }
+
+  depends_on = [
+    aws_security_group.eks_cluster_sg,
+    aws_iam_role_policy_attachment.eks_cluster_policy_attachment,
+    aws_iam_role_policy_attachment.ec2_full_access_policy_attachment,
+    aws_iam_role_policy_attachment.ecr_readonly_policy_attachment,
+    aws_iam_role_policy_attachment.eks_worker_node_policy_attachment
+  ]
+}
+
+resource "aws_eks_node_group" "infra_node_group" {
+  cluster_name    = var.infra_cluster_name
+  node_group_name = "infra-nodes"
+  node_role_arn   = aws_iam_role.eks_ec2_role.arn
+  subnet_ids      = aws_subnet.eks_subnet[*].id
+
+  scaling_config {
+    desired_size = 3
+    min_size     = 1
+    max_size     = 5
+  }
+
+  instance_types = ["t2.large"]
+
+  connection {
+    type        = "ssh"
+    host        = self.public_ip
+    user        = "ubuntu"
+    private_key = file("${path.module}/project4.pem")
+    timeout     = "10m"
+  }
+
+  depends_on = [
+    aws_eks_cluster.infra_cluster
+  ]
+}
+
+
+output "flask_cluster_name" {
+  value = aws_eks_cluster.flask_cluster.name
+}
+
+output "infra_cluster_name" {
+  value = aws_eks_cluster.infra_cluster.name
 }

@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app
-  namespace: flask-space
+  name: infra-flask
+  namespace: infra-space
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: flask-app
+      app: infra-flask
   template:
     metadata:
       labels:
-        app: flask-app
+        app: infra-flask
     spec:
       containers:
-        - name: flask-app
-          image: "{{ .Values.image_flask.repository }}:{{ .Values.image_flask.tag }}"
+        - name: infra-flask
+          image: sivanmarom/infra_flask:infra_flask
           ports:
-            - containerPort: 5001
+            - containerPort: 5000
           resources:
             limits:
               cpu: "1"
@@ -25,18 +25,17 @@ spec:
             requests:
               cpu: "0.5"
               memory: "512Mi"
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: flask-app
-  namespace: flask-space
+  name: infra-flask
+  namespace: infra-space
 spec:
   selector:
-    app: flask-app
+    app: infra-flask
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5001
+      targetPort: 5000
   type: LoadBalancer

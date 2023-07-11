@@ -29,25 +29,25 @@ pipeline {
                           sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
                        sh 'kubectl get nodes'
 
-                        sh 'kubectl apply -f namespace.yaml'
+                        sh 'kubectl apply -f namespace_flask.yaml'
 
                         // Update values.yaml with image tag parameters
                         sh "sed -i 's/tag: latest/tag: ${image_name}/' values.yaml"
                         sh "cat values.yaml"
                         // Build your Helm chart
                         sh 'helm package .'
-                        sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace apps-space -f values.yaml"
+                        sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
                     }
                 }
             }
         }
 
-        stage('Apps Deploy') {
+        stage('App Deploy') {
             steps {
                 dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart/templates') {
                     script {
                         sh 'kubectl apply -f flask-app-deployment.yaml'
-                        sh 'kubectl get all --namespace apps-space'
+                        sh 'kubectl get all --namespace flask-space'
                     }
                 }
             }

@@ -1,17 +1,11 @@
-global: 
+global:
   scrape_interval: 15s
-  evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: "prometheus"
+  - job_name: 'flask'
     scrape_interval: 5s
     static_configs:
-      - targets: ["localhost:9090"]
-  - job_name: 'flask-app'
-    static_configs:
-      - targets: ['flask-app.apps-space:5001']
- 
-
+      - targets: ['ae150c7e7c6504e569c75e041d35b03c-485880012.us-west-2.elb.amazonaws.com']
   
   
   
