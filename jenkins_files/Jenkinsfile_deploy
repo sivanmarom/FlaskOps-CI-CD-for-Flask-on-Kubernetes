@@ -26,7 +26,7 @@ pipeline {
             steps {
                 dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart') {
                     script {
-                          sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
+                          sh 'eksctl utils write-kubeconfig --cluster=flask-cluster'
                        sh 'kubectl get nodes'
 
                         sh 'kubectl apply -f namespace_flask.yaml'
