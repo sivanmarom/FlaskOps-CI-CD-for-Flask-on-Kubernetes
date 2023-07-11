@@ -38,7 +38,7 @@ pipeline {
                     
                 }
                 dir('/home/ubuntu/workspace/cluster-launch/final_project/k8s/mychart/templates'){
-                    sh 'kubectl apply -f infra-app-deployment.yaml'
+                    sh 'kubectl apply -f infra_app_deployment.yaml'
                     sh 'kubectl get all --namespace infra-space'
                 }
             }
