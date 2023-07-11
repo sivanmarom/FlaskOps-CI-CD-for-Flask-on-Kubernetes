@@ -33,11 +33,11 @@ pipeline {
         }
         stage('deploy infra-app'){
             steps{
-                dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart'){
+                dir('/home/ubuntu/workspace/cluster-launch/final_project/k8s/mychart'){
                     sh 'kubectl apply -f namespace_infra.yaml'
                     
                 }
-                dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart/templates'){
+                dir('/home/ubuntu/workspace/cluster-launch/final_project/k8s/mychart/templates'){
                     sh 'kubectl apply -f flask-app-deployment.yaml'
                     sh 'kubectl get all --namespace infra-space'
                 }
