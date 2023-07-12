@@ -38,6 +38,7 @@ pipeline {
                         sh 'helm package .'
                         sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
                         sh 'kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml'
+                        sh 'kubectl apply -f hpa.yaml'
                     }
                 }
             }
@@ -50,7 +51,6 @@ pipeline {
             steps {
                 dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart/templates') {
                     script {
-                        sh 'kubectl apply -f hpa.yaml'
                         sh 'kubectl apply -f flask-app-deployment.yaml'
                         sh 'kubectl get all --namespace flask-space'
                     }
