@@ -37,9 +37,11 @@ pipeline {
                         // Build your Helm chart
                         sh 'helm package .'
                         sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
-                         sh 'git clone https://github.com/kubernetes-sigs/metrics-server.git'
-                        sh '(cd metrics-server && find . -type d -name "*.*+")'
-                        sh 'kubectl apply -f $(find metrics-server -type d -name "*.*+" -print -quit)'
+                        sh 'git clone https://github.com/kubernetes-sigs/metrics-server.git'
+                        sh 'wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv4.2.0/kustomize_v4.2.0_linux_amd64.tar.gz'
+                        sh 'tar -xvf kustomize_v4.2.0_linux_amd64.tar.gz'
+                        sh 'chmod u+x kustomize'
+                        sh './kustomize build metrics-server/manifests/overlays/release-ha-1.21+ | kubectl apply -f -'
                         sh 'kubectl apply -f hpa.yaml'
                     }
                 }
