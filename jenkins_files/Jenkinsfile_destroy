@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Destroy S3 Bucket') {
             steps {
-                dir('home/ubuntu/workspace/testing/final_project/terraform/s3'){
+                dir('/home/ubuntu/workspace/testing/final_project/terraform/s3'){
                     sh "aws s3 rm  s3://sivan-flask-bucket/flask_report.html"
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
