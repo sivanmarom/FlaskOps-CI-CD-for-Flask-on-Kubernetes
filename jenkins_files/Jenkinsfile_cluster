@@ -6,16 +6,16 @@ pipeline {
     stages {
 
          stage('git clone') {
-    steps {
-        sh 'rm -rf *'
-        withCredentials([
-            usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
-        ]) {
-            sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
-            sh 'git clone https://github.com/sivanmarom/final_project.git'
-        }
-    }
-}
+            steps {
+                sh 'rm -rf *'
+                withCredentials([
+                usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
+                ]) {
+                    sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
+                    sh 'git clone https://github.com/sivanmarom/final_project.git'
+                }
+            }
+        }       
         stage('create EKS clusters') {
             steps {
                 dir('/home/ubuntu/workspace/cluster-launch/final_project/terraform/eks') {
@@ -42,8 +42,8 @@ pipeline {
         //             sh 'kubectl get all --namespace infra-space'
         //         }
         //     }
-        // }
+        }
     
     }
-}
+
 
