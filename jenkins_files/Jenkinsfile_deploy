@@ -47,10 +47,6 @@ pipeline {
             }
         }
 
-kubectl apply -f https://github.com/kubernetes/autoscaler/raw/main/vertical-pod-autoscaler/deploy/updater-deployment.yaml
-
-
-
 
         stage('App Deploy') {
             steps {
