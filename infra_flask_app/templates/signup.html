@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>signup</title>
-   <link rel="stylesheet" type="text/css" href='/static/mystyle.css'>
-</head>
-<body>
-<h1>SIGN UP</h1>
-<div class="sign_up_form">
-<form method="post" action="/signup">
-    <label class="sign_up_label">Enter username</label>
-    <br>
-     <input class="input" type = "text" name="username" placeholder="Enter name" required>
-    <br>
-     <label class="sign_up_label">Enter password</label>
-    <br>
-    <input class="input" type="password" name="password" placeholder="Enter password" required>
-    <br>
-    <input class="submit" type="submit" value="sign-up">
-</form>
-</div>
-
-</body>
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css" />
+  </head>
+  <body>
+    <h1>SIGN UP</h1>
+    <div class="sign_up_form">
+      <form method="post" action="/signup">
+        <label class="sign_up_label">Enter username</label>
+        <br />
+        <input
+          class="input"
+          type="text"
+          name="username"
+          placeholder="Enter name"
+          required
+        />
+        <br />
+        <label class="sign_up_label">Enter password</label>
+        <br />
+        <input
+          class="input"
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          required
+        />
+        <br />
+        <input class="submit" type="submit" value="sign-up" />
+      </form>
+    </div>
+  </body>
 </html>

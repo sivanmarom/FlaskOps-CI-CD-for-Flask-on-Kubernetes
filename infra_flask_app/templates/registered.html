@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>welcome user</title>
-       <link rel="stylesheet" type="text/css" href='/static/mystyle.css'>
-</head>
-<body>
-
-<div class="registered_user">
-{% for user in my_users %}
-  <h1 class="hello_user">Hello {{user}}</h1>
-{% endfor %}
-    <h2>What would you like to do today?</h2>
-</div>
-<div class="button-bar">
-  <button class="button"><a href="/docker_image">Docker</a></button>
-  <button class="button"><a href="/aws">AWS</a></button>
- <!-- <button class="button"><a href="/jenkins">Jenkins User</a></button>-->
-  <button class="button"><a href="/jenkins_job/pipeline">Jenkins Job</a></button>
-<button class="button"><a href="/create_jenkins_user">Create Jenkins User</a></button>
-
-</div>
-</body>
+    <link rel="stylesheet" type="text/css" href="/static/mystyle.css" />
+  </head>
+  <body>
+    <div class="registered_user">
+      {% for user in my_users %}
+      <h1 class="hello_user">Hello {{user}}</h1>
+      {% endfor %}
+      <h2>What would you like to do today?</h2>
+    </div>
+    <div class="button-bar">
+      <button class="button"><a href="/docker_image">Docker</a></button>
+      <button class="button"><a href="/aws">AWS</a></button>
+      <button class="button">
+        <a href="/jenkins_job/pipeline">Jenkins Job</a>
+      </button>
+    </div>
+  </body>
 </html>

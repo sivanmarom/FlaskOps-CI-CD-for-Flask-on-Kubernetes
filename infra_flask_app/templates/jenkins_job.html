@@ -8,7 +8,12 @@
   <body>
     <header>
       <button class="button"><a href="/registered">Home</a></button>
-      <h1>Create Jenkins Job</h1>
+      <img
+        class="icon"
+        src="{{ url_for('static', filename='jenkins.png') }}"
+        alt="Jenkins icon"
+      />
+      <h1 class="title">Create Jenkins Job</h1>
     </header>
     <div class="freestyle_job">
       <form method="POST" action="/jenkins_job/freestyle">

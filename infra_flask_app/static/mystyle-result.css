@@ -1,12 +1,10 @@
 /* Style for the entire page */
 body {
-  background-image: url('background_homepage.jpg');
-  background-repeat: no-repeat;
+  background-image: url('back_new.jpg');
   background-position: center center;
-  background-attachment: fixed;
-  background-size: cover;
+  /* background-attachment: fixed; */
+  background-size: auto;
   font-family: cursive, sans-serif;
-  opacity:0.85;
 }
 
 /* Style for the heading */
@@ -22,24 +20,35 @@ form {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #f5f5f5;
+  background-color: white;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   opacity:0.85
 }
 .pipeline_job{
     width: 30%;
-    margin: 0 auto;
+    margin-left: 150px;
+    float: left;
 }
 
 .freestyle_job{
     width: 30%;
-    margin: 0 auto;
+    margin-right: 150px;
+    float: right;
+
 }
 label, input[type="text"], input[type="password"], input[type="number"], select {
   display: block;
   margin: 10px 0;
 }
 
+input[type="text"], input[type="number"]{
+  background-color: #E8F0FE;
+}
+header {
+  background-color: #E8F0FE;
+  color: black;
+  border-radius:3%;
+}
 
 /* Style for the form submit button */
 input[type="submit"] {
@@ -47,7 +56,7 @@ input[type="submit"] {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #333;
+  background-color: #E8F0FE;
   color: #fff;
   font-size: 16px;
   cursor: pointer;
@@ -56,17 +65,19 @@ input[type="submit"] {
 
 /* Style for the form submit button on hover */
 input[type="submit"]:hover {
-  background-color: #ccc;
+  background-color: #E8F0FE;
   color: #333;
 }
 
 
 .select{
      font-family: cursive;
+     background-color: #E8F0FE;
 }
 
 .submit{
 font-family: cursive;
+background-color: #E8F0FE;
 }
 
 .button a{
@@ -74,4 +85,22 @@ font-family: cursive;
   font-family: cursive;
   font-size: 20px;
   color: black;
+  background-color: #E8F0FE;
+  
 }
+
+.button{
+  border-color: white;
+  background-color: #E8F0FE;
+}
+
+.title{
+  padding-bottom: 20px;
+}
+
+.icon{
+  padding: 10px;
+  width: auto;
+    height: 40px;
+    float: right;
+  }

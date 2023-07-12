@@ -1,6 +1,6 @@
 /* change background color of page */
 body {
-  background-image: url('background_homepage.jpg');
+  background-image: url('back_new.jpg');
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
@@ -21,14 +21,17 @@ h1 {
 
 /* Style for the header */
 header {
-    background-color: #d5bdaf;
+    background-color: #E8F0FE;
     color: black;
     border-radius:3%;
 
 
 
 }
-
+.title{
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
 /* Style for the header links */
 header a {
     color: black;
@@ -49,7 +52,7 @@ header a:hover {
     border-color: black;
     border:solid;
     border-radius:3%;
-    background-color: #f5ebe0;
+    background-color:#E8F0FE;
 
 }
 
@@ -63,7 +66,7 @@ main {
 .icon{
 padding: 10px;
 width: auto;
-  height: 50px;
+  height: 70px;
 }
 
 .icons_container{
@@ -108,10 +111,9 @@ color:black;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f5ebe0;
+    background-color:white;
 
 }
-
 .input {
             display: block;
             width: 100%;
@@ -123,11 +125,11 @@ color:black;
 
         }
 
-   .submit {
+.submit {
             display: block;
             width: 100%;
             padding: 10px;
-            background-color: #black;
+            background-color: #E8F0FE;
             color: black;
             border: 2px solid #ccc;
             border-radius: 5px;
@@ -151,6 +153,8 @@ color:black;
 .button{
     font-size: 15px;
     font-family: cursive;
+    background-color: #E8F0FE;
+    border-color: white;
 
 }
 
@@ -161,13 +165,13 @@ color:black;
   margin: 10px;
 }
 
-.iam_user{
-float:center;
-background-color: white;
-text-align:left;
+h3{
 align-items:center;
 }
 
-h3{
-align-items:center;
+.icon_docker{
+    padding: 15px;
+    width: auto;
+      height: 60px;
+      float: right;
 }

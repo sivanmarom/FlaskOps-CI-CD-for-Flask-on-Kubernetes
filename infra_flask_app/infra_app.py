@@ -75,9 +75,9 @@ def launch_instance():
         user_data += 'docker run --name jenkins_master -p 8080:8080 -p 50000:50000 -d -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts\n'
     instance_name = request.form.get('instance_name')
     instance_type = request.form.get('instance_type')
-    key_pair_name = 'jenkins-master'
+    key_pair_name = 'project4'
     image_id = request.form.get('image_id')
-    security_group_id = 'sg-03915679baa198009'
+    security_group_id = 'sg-0450400339dd7cb3e'
     instance_count = int(request.form['instance_count'])
     instances = []
     for i in range(instance_count):
@@ -115,58 +115,16 @@ def launch_instance():
 def create_docker_image():
     if request.method == 'POST':
         image_name = request.form.get('image_name')
-        session['image_name'] = image_name  # Store image_name in session
-        dockerfile = request.files['dockerfile']
-        requirements = request.files['requirements']
-        app_file = request.files['app']
-
-        # Create a temporary directory to save the uploaded files
-        with tempfile.TemporaryDirectory() as temp_dir:
-            dockerfile_path = os.path.join(
-                temp_dir, secure_filename(dockerfile.filename))
-            requirements_path = os.path.join(
-                temp_dir, secure_filename(requirements.filename))
-            app_path = os.path.join(
-                temp_dir, secure_filename(app_file.filename))
-
-            dockerfile.save(dockerfile_path)
-            requirements.save(requirements_path)
-            app_file.save(app_path)
-
-            subprocess.run(
-                ['docker', 'build', '-t', f'{image_name}', '-f', dockerfile_path, '.'])
-            subprocess.run(
-                ['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
-            subprocess.run(
-                ['docker', 'login', '-u', 'sivanmarom', '-p', 'sm5670589'])
-            subprocess.run(['docker', 'push', f'sivanmarom/test:{image_name}'])
+        subprocess.run(['docker', 'build', '-t', f'{image_name}', '.'])
+        subprocess.run(
+            ['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
+        subprocess.run(
+            ['docker', 'login', '-u', 'sivanmarom', '-p', 'sm5670589'])
+        subprocess.run(['docker', 'push', f'sivanmarom/test:{image_name}'])
 
         return redirect(url_for('create_jenkins_job_pipeline'))
     else:
         return render_template('docker_image.html')
-
-
-@app.route('/create_jenkins_user', methods=['POST', 'GET'])
-def create_jenkins_user():
-    if request.method == 'POST':
-        new_username = request.form.get('new_username')
-        new_password = request.form.get('new_password')
-        full_name = request.form.get('full_name')
-        email = request.form.get('email')
-        jenkins_url = request.form.get('jenkins_url')
-        jar_filename = 'jenkins-cli.jar'
-        jar_path = os.path.join(os.path.dirname(
-            os.path.abspath(__file__)), jar_filename)
-        java_path = r'C:\Program Files\Java\jdk-11\bin\java'
-
-        command = f'echo \'jenkins.model.Jenkins.instance.securityRealm.createAccount("{new_username}", "{new_password}", "{full_name}", "{email}")\' | "{java_path}" -jar "{jar_path}" -s "{jenkins_url}" groovy ='
-        subprocess.run(command, shell=True)
-
-        return "Jenkins user created successfully"
-
-    return render_template('jenkins_user.html')
-
-# working
 
 
 @app.route('/jenkins_job/freestyle', methods=['POST', 'GET'])

@@ -4,11 +4,31 @@
     <meta charset="UTF-8" />
     <title>AWS</title>
     <link rel="stylesheet" type="text/css" href="/static/mystyle-aws.css" />
+    <script>
+      function submitForm() {
+        // Show loading GIF
+        var loadingGif = document.createElement("img");
+        loadingGif.src = "/static/loading.gif"; // Replace with the actual path to your loading GIF
+        document.body.appendChild(loadingGif);
+
+        // Disable form submit button to prevent multiple submissions
+        var submitButton = document.querySelector('input[type="submit"]');
+        submitButton.disabled = true;
+
+        // Submit the form
+        document.forms[0].submit();
+      }
+    </script>
   </head>
   <body>
     <header>
       <button class="button"><a href="/registered">Home</a></button>
-      <h1>AWS Management Console</h1>
+      <img
+        class="icon"
+        src="{{ url_for('static', filename='aws.png') }}"
+        alt="AWS icon"
+      />
+      <h1 class="title">AWS Management Console</h1>
     </header>
     <div class="container_iam_form">
       <form action="/aws" method="POST">
@@ -19,6 +39,39 @@
         <input type="password" name="password" required />
 
         <input type="submit" name="submit" value="Create user" />
+      </form>
+    </div>
+    <div class="container_instance_form">
+      <form action="/aws" method="POST" onsubmit="submitForm();">
+        <h2>Launch New Instance</h2>
+        <label>Instance Name</label>
+        <input type="text" name="instance_name" required />
+        <label for="instance_type">Select Instance Type</label>
+        <select class="select" name="instance_type" id="instance_type" required>
+          <option value="t3.micro">t3.micro</option>
+          <option value="t3.small">t3.small</option>
+          <option value="t3.medium">t3.medium</option>
+        </select>
+        <label for="image_id">Select Operating System</label>
+        <select class="select" name="image_id" id="image_id" required>
+          <option value="ami-0507f77897697c4ba">Amazon Linux</option>
+          <option value="ami-0c65adc9a5c1b5d7c">Ubuntu 20.04</option>
+          <option value="ami-05cc83e573412838f ">
+            Windows Server 2022 Base
+          </option>
+          <option value="ami-0c9fc71c27f48b6f4">macOS Ventura</option>
+        </select>
+        <label>Instance Count</label>
+        <input type="number" name="instance_count" required step="1" />
+        <div class="checkbox-container">
+          <input type="checkbox" name="add_docker" value="true" />
+          <label for="add_docker">Install Docker</label>
+        </div>
+        <div class="checkbox-container">
+          <input type="checkbox" name="add_jenkins" value="true" />
+          <label for="add_jenkins">Set up Jenkins Server</label>
+        </div>
+        <input type="submit" name="submit" value="Create instance" />
       </form>
       <div class="instances_table">
         <table>
@@ -42,39 +95,6 @@
           </tbody>
         </table>
       </div>
-    </div>
-    <div class="container_instance_form">
-      <form action="/aws" method="POST">
-        <h2>Launch New Instance</h2>
-        <label>Instance Name</label>
-        <input type="text" name="instance_name" required />
-        <label for="instance_type">Select Instance Type</label>
-        <select class="select" name="instance_type" id="instance_type" required>
-          <option value="t2.micro">t2.micro</option>
-          <option value="t2.small">t2.small</option>
-          <option value="t2.medium">t2.medium</option>
-        </select>
-        <label for="image_id">Select Operating System</label>
-        <select class="select" name="image_id" id="image_id" required>
-          <option value="ami-06e46074ae430fba6">Amazon Linux</option>
-          <option value="ami-0aa2b7722dc1b5612">Ubuntu 20.04</option>
-          <option value="ami-0bde1eb2c18cb2abe">
-            Windows Server 2022 Base
-          </option>
-          <option value="ami-00805552fa999b1a0">macOS Ventura</option>
-        </select>
-        <label>Instance Count</label>
-        <input type="number" name="instance_count" required step="1" />
-        <div class="checkbox-container">
-          <input type="checkbox" name="add_docker" value="true" />
-          <label for="add_docker">Install Docker</label>
-        </div>
-        <div class="checkbox-container">
-          <input type="checkbox" name="add_jenkins" value="true" />
-          <label for="add_jenkins">Set up Jenkins Server</label>
-        </div>
-        <input type="submit" name="submit" value="Create instance" />
-      </form>
     </div>
   </body>
 </html>
