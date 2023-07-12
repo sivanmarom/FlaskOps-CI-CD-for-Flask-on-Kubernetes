@@ -4,7 +4,7 @@ pipeline {
     }
     
     stages {
-        stage('destroy EKS cluster') {
+        stage('Destroy EKS Cluster') {
             steps {
                 dir('/home/ubuntu/workspace/cluster-launch/final_project/terraform/eks'){
                     sh 'terraform init'

@@ -4,78 +4,54 @@ pipeline {
     }
 
     stages {
-        stage('Hello') {
-          steps {
-            sh "echo \${image_name}"
-          }
+        stage('Git Clone') {
+            steps {
+                sh 'rm -rf *'
+                withCredentials([usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
+                ]) {
+                    sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
+                    sh 'git clone https://github.com/sivanmarom/final_project.git'
+                }
+            }
         }
 
-        stage('git clone') {
-    steps {
-        sh 'rm -rf *'
-        withCredentials([
-            usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
-        ]) {
-            sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
-            sh 'git clone https://github.com/sivanmarom/final_project.git'
-        }
-    }
-}
-
-        stage("build user") {
+        stage("Build User") {
             steps {
                 wrap([$class: 'BuildUser', useGitAuthor: true]) {
                     script {
                         env.BUILD_USER = BUILD_USER
-                        echo "Build user: ${env.BUILD_USER}"
                     }
                 }
             }
         }
 
-        stage('Create S3 Buckets') {
+        stage('Create S3 Bucket') {
             steps {
                 dir('/home/ubuntu/workspace/testing/final_project/terraform/s3') {
                     script {
                         sh 'terraform init'
                         sh 'terraform apply --auto-approve'
-
-                        // Retrieve the bucket names
                         def flaskAppBucketName = sh(script: 'terraform output -raw flask_app_bucket_name', returnStdout: true).trim()
-
-                        // Set environment variables with the bucket names
-                        env.FLASK_APP_BUCKET_NAME = flaskAppBucketName
-                        
-
-                        echo "Flask App Bucket Name: ${env.FLASK_APP_BUCKET_NAME}"
-                        
+                        env.FLASK_APP_BUCKET_NAME = flaskAppBucketName                        
                     }
                 }
             }
         }
 
-        stage('Create Dynamodb Tables') {
+        stage('Create Dynamodb Table') {
             steps {
                 dir('/home/ubuntu/workspace/testing/final_project/terraform/dynamodb') {
                     script{
                         sh 'terraform init'
                         sh 'terraform apply --auto-approve'
-
-                        // Retrieve the table names
                         def flaskAppTableName = sh(script: 'terraform output -raw flask_app_table_name', returnStdout: true).trim()
-
-                        // Set environment variables with the table names
                         env.FLASK_APP_TABLE_NAME = flaskAppTableName
-                     
-
-                        echo "Flask App Table Name: ${env.FLASK_APP_TABLE_NAME}"
-                       
                     }
                 }
             }
         }
 
-        stage('build and test flask_app') {
+        stage('Build and Test Flask-App') {
             steps {
                 dir('/home/ubuntu/workspace/testing/final_project') {
                     sh "docker build -t flask_app_image:${image_name} ."
@@ -88,14 +64,12 @@ pipeline {
                         def (timestamp, message) = log_entry_flask.split(',')
                         env.FLASK_TIMESTAMP = timestamp.trim()
                         env.FLASK_MESSAGE = message.trim().replaceAll('"', '\\"')             
-                        echo "flask Timestamp: ${env.FLASK_TIMESTAMP}"
-                        echo "flask Message: ${env.FLASK_MESSAGE}"
                     }
                 }
             }
         }
 
-        stage('upload to s3 bucket') {
+        stage('Upload Test to S3 Bucket') {
             steps {
                 dir('/home/ubuntu/workspace/testing/final_project/tests') {
                     withAWS(credentials: 'aws-credentials') {
@@ -105,7 +79,7 @@ pipeline {
             }
         }
 
-        stage('Upload to dynamodb') {
+        stage('Upload Test to Dynamodb') {
             steps {
                 dir('/home/ubuntu/workspace/testing/final_project/tests') {
                     script {
@@ -117,59 +91,15 @@ pipeline {
             }
         }
 
-        stage('push to dockerhub flask_app') {
+        stage('Push Flask-App to Dockerhub') {
             steps {
-             withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                sh "docker tag flask_app_image:${image_name} sivanmarom/flask_app:${image_name}"
-                sh "docker push sivanmarom/flask_app:${image_name}"
+                    sh "docker tag flask_app_image:${image_name} sivanmarom/flask_app:${image_name}"
+                    sh "docker push sivanmarom/flask_app:${image_name}"
+                }
             }
         }
-        }
-
-        // stage('create EKS cluster') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/terraform/eks') {
-        //             sh 'terraform init'
-        //             sh 'terraform apply --auto-approve'
-        //             sh 'eksctl utils write-kubeconfig --cluster=eks-cluster'
-        //             sh 'kubectl get nodes'
-        //         }
-        //     }
-        // }
-
-        // stage('Helm Chart') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/k8s/mychart') {
-        //             script {
-        //                 def imageTagFlask = env.FLASK_APP_VERSION
-        //                 def imageTagInfra = env.INFRA_FLASK_VERSION
-
-        //                 sh 'kubectl apply -f namespace.yaml'
-
-        //                 // Update values.yaml with image tag parameters
-        //                 sh "sed -i 's/tag: latest/tag: ${imageTagFlask}/' values.yaml"
-        //                 sh "sed -i 's/tag: latest/tag: ${imageTagInfra}/' values.yaml"
-        //                 sh "cat values.yaml"
-        //                 // Build your Helm chart
-        //                 sh 'helm package .'
-        //                 sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace apps-space -f values.yaml"
-        //             }
-        //         }
-        //     }
-        // }
-
-        // stage('Apps Deploy') {
-        //     steps {
-        //         dir('/var/lib/jenkins/workspace/deployment/final_project/k8s/mychart/templates') {
-        //             script {
-        //                 sh 'kubectl apply -f infra-flask-deployment.yaml'
-        //                 sh 'kubectl apply -f flask-app-deployment.yaml'
-        //                 sh 'kubectl get all --namespace apps-space'
-        //             }
-        //         }
-        //     }
-        // }        
     }
 }
 

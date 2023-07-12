@@ -3,26 +3,19 @@ pipeline {
         label "final"
     }
     
-    stages {
-        stage('echo'){
-            steps{
-                dir('home/ubuntu/workspace/'){
-                sh 'echo destroy'
-                }
-            }
-        }
-        stage('destroy S3 Buckets') {
+    stages {    
+        stage('Destroy Dynamodb Table') {
             steps {
-                dir('home/ubuntu/workspace/testing/final_project/terraform/s3'){
-                    sh "aws s3 rm  s3://sivan-flask-bucket/flask_report.html"
+                dir('/home/ubuntu/workspace/testing/final_project/terraform/dynamodb'){
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
                 }
             }
         }
-        stage('destroy dynamodb tables') {
+        stage('Destroy S3 Bucket') {
             steps {
-                dir('/home/ubuntu/workspace/testing/final_project/terraform/dynamodb'){
+                dir('home/ubuntu/workspace/testing/final_project/terraform/s3'){
+                    sh "aws s3 rm  s3://sivan-flask-bucket/flask_report.html"
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
                 }
@@ -32,7 +25,6 @@ pipeline {
             steps {
                 sh 'docker rm -f $(docker ps -aq)'
             }
-        }
-        
+        }  
     }
 }
