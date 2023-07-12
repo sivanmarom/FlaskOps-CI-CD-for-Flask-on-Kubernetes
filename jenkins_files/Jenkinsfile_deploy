@@ -38,7 +38,7 @@ pipeline {
                         sh 'helm package .'
                         sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
                         sh 'git clone https://github.com/kubernetes-sigs/metrics-server.git'
-                        sh 'kubectl apply -f metrics-server/deploy/1.8+/'
+                        sh 'kubectl apply -f metrics-server/deploy/kubernetes/'
                         sh 'kubectl apply -f hpa.yaml'
                     }
                 }
