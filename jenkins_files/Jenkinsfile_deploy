@@ -37,10 +37,8 @@ pipeline {
                         // Build your Helm chart
                         sh 'helm package .'
                         sh "helm upgrade --install mychart mychart-0.1.0.tgz --namespace flask-space -f values.yaml"
-                        sh 'kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml'
-                        sh 'kubectl apply -f updater-deployment.yaml'
-                        sh 'kubectl apply -f recommender-deployment-high.yaml'
-                        sh 'kubectl apply -f admission-controller-deployment.yaml'
+                        sh 'git clone https://github.com/kubernetes-sigs/metrics-server.git'
+                        sh 'kubectl apply -f metrics-server/deploy/1.8+/'
                         sh 'kubectl apply -f hpa.yaml'
                     }
                 }
