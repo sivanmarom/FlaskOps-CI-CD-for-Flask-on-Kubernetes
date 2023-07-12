@@ -115,6 +115,7 @@ def launch_instance():
 def create_docker_image():
     if request.method == 'POST':
         image_name = request.form.get('image_name')
+        session['image_name'] = image_name
         subprocess.run(['docker', 'build', '-t', f'{image_name}', '.'])
         subprocess.run(
             ['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
