@@ -14,7 +14,6 @@ from bs4 import BeautifulSoup
 app = Flask(__name__)
 my_users = []
 
-
 # Create AWS clients and resources
 s3 = boto3.client("s3")
 ec2 = boto3.resource("ec2")
