@@ -8,7 +8,7 @@ pipeline {
             steps {
                 dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart') {   
                     sh 'kubectl delete configmap --all --all-namespaces' 
-                    sh 'kubectl delete -f metrics-server/manifests/overlays/release-ha-1.21+'      
+                    sh 'kubectl delete all --all --namespace infra-space'
                     sh 'kubectl delete all --all --namespace flask-space'
                 }
             }
