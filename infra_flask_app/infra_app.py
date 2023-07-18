@@ -7,8 +7,18 @@ import jenkins
 import os
 from werkzeug.utils import secure_filename
 import tempfile
+import requests
+from requests.auth import HTTPBasicAuth
+from bs4 import BeautifulSoup
+
 app = Flask(__name__)
 my_users = []
+
+
+# Create AWS clients and resources
+s3 = boto3.client("s3")
+ec2 = boto3.resource("ec2")
+iam = boto3.client("iam")
 
 secret_key = os.urandom(24)
 app.secret_key = secret_key
@@ -109,14 +119,13 @@ def launch_instance():
     return instances
 
 
-# working
-
 @app.route('/docker_image', methods=['POST', 'GET'])
 def create_docker_image():
     if request.method == 'POST':
         image_name = request.form.get('image_name')
         session['image_name'] = image_name
-        subprocess.run(['docker', 'build', '-t', f'{image_name}', '.'])
+        subprocess.run(['docker', 'build', '-t',
+                       f'{image_name}', '-f', 'hello/Dockerfile', 'hello'])
         subprocess.run(
             ['docker', 'tag', f'{image_name}', f'sivanmarom/test:{image_name}'])
         subprocess.run(
@@ -163,6 +172,107 @@ def create_jenkins_job_pipeline():
         server.build_job(job_name, parameters=image_dict)
         return "Job created successfully"
     return render_template('jenkins_job.html')
+
+
+def create_user(username: str, password: str, full_name: str, email: str, jenkins_url: str):
+    jenkins_admin_username = "sivan_marom"
+    # Replace with your Jenkins API Token
+    jenkins_api_token = "114af544a4188b2e7bbee9396f400a4e4a"
+    create_user_url = f"{jenkins_url}securityRealm/createAccountByAdmin"
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": f"Bearer {jenkins_api_token}"
+    }
+    data = {
+        "username": username,
+        "password1": password,
+        "password2": password,
+        "fullname": full_name,
+        "email": email,
+        "jenkins.security.ApiTokenProperty": True
+    }
+
+    response = requests.post(create_user_url, headers=headers, data=data, auth=HTTPBasicAuth(
+        jenkins_admin_username, jenkins_api_token))
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        error_div = soup.find('div', class_='error')
+        if error_div:
+            error_message = error_div.text.strip()
+            return {
+                "success": False,
+                "message": f"Error creating user '{username}': {error_message}"
+            }
+        else:
+            return {
+                "success": True,
+                "message": f"User '{username}' created successfully.",
+                "statusCode:": response.status_code
+            }
+    else:
+        return {
+            "success": False,
+            "message": f"Error creating user '{username}': {response.text}",
+            "statusCode:": response.status_code
+        }
+
+
+def jenkins_user_assign_roles(username: str, jenkins_url: str):
+    new_role = 'admin'
+    jenkins_admin_username = "sivan_marom"
+    # Replace with your Jenkins API Token
+    jenkins_api_token = "114af544a4188b2e7bbee9396f400a4e4a"
+    assign_role_url = f"{jenkins_url}role-strategy/strategy/assignRole"
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": f"Bearer {jenkins_api_token}"
+    }
+    data = {
+        "type": "globalRoles",
+        "roleName": new_role,
+        "sid": username
+    }
+
+    response = requests.post(assign_role_url, headers=headers, data=data, auth=HTTPBasicAuth(
+        jenkins_admin_username, jenkins_api_token))
+
+    if response.status_code == 200:
+        return {
+            "success": True,
+            "message": f"Role '{new_role}' assigned to user '{username}' successfully.",
+            "statusCode": response.status_code
+        }
+    else:
+        return {
+            "success": False,
+            "message": f"Error assigning role '{new_role}' to user '{username}': {response.text}",
+            "statusCode": response.status_code
+        }
+
+
+@app.route('/create_jenkins_user', methods=['POST', 'GET'])
+def create_jenkins_user():
+    if request.method == 'POST':
+        new_username = request.form.get('new_username')
+        new_password = request.form.get('new_password')
+        full_name = request.form.get('full_name')
+        email = request.form.get('email')
+        jenkins_url = request.form.get('jenkins_url')
+
+        user_creation_result = create_user(
+            new_username, new_password, full_name, email, jenkins_url)
+        if user_creation_result["success"]:
+            user_assign_roles_result = jenkins_user_assign_roles(
+                new_username, jenkins_url)
+            if user_assign_roles_result["success"]:
+                return "Jenkins user created and assigned role successfully"
+            else:
+                return f"Error assigning role to user: {user_assign_roles_result['message']}"
+        else:
+            return f"Error creating Jenkins user: {user_creation_result['message']}"
+
+    return render_template('create_jenkins_user.html')
 
 
 if __name__ == "__main__":
