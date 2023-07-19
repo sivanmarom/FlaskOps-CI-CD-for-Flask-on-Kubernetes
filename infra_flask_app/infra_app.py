@@ -143,7 +143,7 @@ def create_jenkins_job_freestyle():
         jenkins_url = request.form.get("jenkins_url")
         server = jenkins.Jenkins(
             jenkins_url, username='sivan_marom', password='1234')
-        with open('infra_flask_app/templates/jenkins_job.xml', 'r') as f:
+        with open('templates/jenkins_job.xml', 'r') as f:
             job_config_xml = f.read()
         server.create_job(job_name, job_config_xml)
         server.build_job(job_name)
@@ -160,10 +160,10 @@ def create_jenkins_job_pipeline():
         image_dict = {'image_name': image_name}
         workspace = request.form.get('workspace')
         if workspace == 'Testing':
-            with open('infra_flask_app/templates/jenkins_job_test.xml', 'r') as f:
+            with open('templates/jenkins_job_test.xml', 'r') as f:
                 job_config_xml = f.read()
         elif workspace == 'Production':
-            with open('infra_flask_app/templates/jenkins_job_pipeline_deploy.xml', 'r') as f:
+            with open('templates/jenkins_job_pipeline_deploy.xml', 'r') as f:
                 job_config_xml = f.read()
         server = jenkins.Jenkins(
             jenkins_url, username='sivan_marom', password='1234')
