@@ -8,8 +8,8 @@
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <url>https://github.com/sivanmarom/DevOps-Application-Deployment-.git</url>
-        <credentialsId>git-credentials</credentialsId>
+        <url>https://github.com/sivanmarom/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes.git</url>
+        <credentialsId>github2</credentialsId>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
