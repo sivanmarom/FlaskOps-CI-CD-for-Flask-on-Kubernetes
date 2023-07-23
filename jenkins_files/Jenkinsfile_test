@@ -27,7 +27,7 @@ pipeline {
 
         stage('Create S3 Bucket') {
             steps {
-                dir('/home/ubuntu/workspace/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/terraform/s3') {
+                dir('/home/ubuntu/workspace/testing/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/terraform/s3') {
                     script {
                         sh 'terraform init'
                         sh 'terraform apply --auto-approve'
