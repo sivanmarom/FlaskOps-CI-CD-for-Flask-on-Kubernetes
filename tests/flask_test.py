@@ -10,7 +10,7 @@ class Test_class(BaseClass):
         global driver
         log = self.log_conf()
         driver = setup
-        driver.get("http://35.86.226.184:5001/")
+        driver.get("http://35.84.189.43:5001/")
         sign_up = driver.find_element(By.CSS_SELECTOR, ".register_link")
         sign_up.click()
         name = 'sivan'
