@@ -10,7 +10,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'github2', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')
                 ]) {
                 sh "git config --global credential.helper '!f() { echo username=$GITHUB_USERNAME; echo password=$GITHUB_PASSWORD; }; f'"
-                sh 'https://github.com/sivanmarom/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes.git'
+                sh 'git clone https://github.com/sivanmarom/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes.git'
                 }
             }
         }
