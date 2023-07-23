@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Helm Chart, metrics server and deploy hpa') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart') {
+                dir('/home/ubuntu/workspace/deployment/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/k8s/mychart') {
                     script {
                         sh 'eksctl utils write-kubeconfig --cluster=flask-cluster'
                         sh 'kubectl get nodes'
@@ -38,7 +38,7 @@ pipeline {
 
         stage('Flask-App Deploy') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart/templates') {
+                dir('/home/ubuntu/workspace/deployment/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/k8s/mychart/templates') {
                     script {
                         sh 'kubectl apply -f flask-app-deployment.yaml'
                         sh 'kubectl get all --namespace flask-space'

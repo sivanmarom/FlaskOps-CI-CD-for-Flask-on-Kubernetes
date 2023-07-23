@@ -27,7 +27,7 @@ pipeline {
 
         stage('Create S3 Bucket') {
             steps {
-                dir('/home/ubuntu/workspace/testing/final_project/terraform/s3') {
+                dir('/home/ubuntu/workspace/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/terraform/s3') {
                     script {
                         sh 'terraform init'
                         sh 'terraform apply --auto-approve'
@@ -40,7 +40,7 @@ pipeline {
 
         stage('Create Dynamodb Table') {
             steps {
-                dir('/home/ubuntu/workspace/testing/final_project/terraform/dynamodb') {
+                dir('/home/ubuntu/workspace/testing/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/terraform/dynamodb') {
                     script{
                         sh 'terraform init'
                         sh 'terraform apply --auto-approve'
@@ -53,11 +53,11 @@ pipeline {
 
         stage('Build and Test Flask-App') {
             steps {
-                dir('/home/ubuntu/workspace/testing/final_project') {
+                dir('/home/ubuntu/workspace/testing/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes') {
                     sh "docker build -t flask_app_image:${image_name} ."
                     sh "docker run -it --name flask_app -p 5001:5001 -d flask_app_image:${image_name}"
                 }
-                dir('/home/ubuntu/workspace/testing/final_project/tests'){
+                dir('/home/ubuntu/workspace/testing/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/tests'){
                     script{
                         sh 'pytest flask_test.py::Test_class --html=flask_report.html'
                         def log_entry_flask = sh(script: 'python3.8 parse_log_flask.py', returnStdout: true).trim()
@@ -71,7 +71,7 @@ pipeline {
 
         stage('Upload Test to S3 Bucket') {
             steps {
-                dir('/home/ubuntu/workspace/testing/final_project/tests') {
+                dir('/home/ubuntu/workspace/testing/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/tests') {
                     withAWS(credentials: 'aws-credentials') {
                         sh "aws s3 cp flask_report.html s3://${env.FLASK_APP_BUCKET_NAME}"
                     }
@@ -81,7 +81,7 @@ pipeline {
 
         stage('Upload Test to Dynamodb') {
             steps {
-                dir('/home/ubuntu/workspace/testing/final_project/tests') {
+                dir('/home/ubuntu/workspace/testing/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/tests') {
                     script {
                         withAWS(credentials: 'aws-credentials', region: 'us-west-2') {
                             sh "aws dynamodb put-item --table-name ${env.FLASK_APP_TABLE_NAME} --item \"{\\\"User\\\": {\\\"S\\\": \\\"${env.BUILD_USER}\\\"}, \\\"Timestamp\\\": {\\\"S\\\": \\\"${env.FLASK_TIMESTAMP}\\\"}, \\\"Message\\\": {\\\"S\\\": \\\"${env.FLASK_MESSAGE}\\\"}}\""

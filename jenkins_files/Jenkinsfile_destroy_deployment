@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Delete Namespace') {
             steps {
-                dir('/home/ubuntu/workspace/deployment/final_project/k8s/mychart') {   
+                dir('/home/ubuntu/workspace/deployment/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/k8s/mychart') {   
                     sh 'kubectl delete configmap --all --all-namespaces' 
                     sh 'kubectl delete all --all --namespace flask-space'
                 }
