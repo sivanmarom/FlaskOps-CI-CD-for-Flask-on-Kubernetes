@@ -5,7 +5,7 @@ scrape_configs:
   - job_name: 'flask'
     scrape_interval: 5s
     static_configs:
-      - targets: ['a710fec2f50dc4e6eb2e9cc43c38e68b-1102740613.us-west-2.elb.amazonaws.com']
+      - targets: ['aebddd7946e22410abe8c6fed7dd4670-505242208.us-west-2.elb.amazonaws.com']
   
   
   
