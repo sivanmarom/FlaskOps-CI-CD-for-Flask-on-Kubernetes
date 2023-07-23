@@ -16,7 +16,7 @@ pipeline {
         }       
         stage('Create EKS Cluster') {
             steps {
-                dir('/home/ubuntu/workspace/cluster-launch/final_project/terraform/eks') {
+                dir('/home/ubuntu/workspace/cluster-launch/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes/terraform/eks') {
                     script{
                         sh 'terraform init'
                         sh 'terraform apply --auto-approve'
