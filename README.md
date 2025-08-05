@@ -1,83 +1,79 @@
-# FlaskOps: Orchestrating Flask Applications on Kubernetes
+⸻
 
-Welcome to FlaskOps, a DevOps project that aims to automate the deployment and management of Flask applications on Kubernetes. This project utilizes various technologies and tools, including Terraform, AWS, Python, Docker, Jenkins, Helm, Prometheus, Grafana, and Kubernetes Horizontal Pod Autoscaler (HPA), to streamline the entire development and deployment lifecycle.
+🚀 FlaskOps – CI/CD for Flask on Kubernetes
 
-## Project Overview
+FlaskOps is a full-stack DevOps project that demonstrates end-to-end CI/CD automation for deploying a Flask application on Kubernetes (EKS). It showcases the use of Jenkins, Terraform, Docker, Helm, Prometheus, Grafana, and HPA to manage, monitor, and scale a cloud-native app.
 
-The project is composed of the following components:
+⸻
 
-1. Jenkins Master: Responsible for managing and coordinating Jenkins jobs.
-2. Jenkins Agent: Communicates with the Jenkins Master and executes jobs, including the creation of the EKS (Elastic Kubernetes Service) cluster.
-3. Infra Flask App: An infrastructure Flask application running as a container on the Jenkins Agent. It handles several tasks:
+🧩 Project Goals • Automate the full development lifecycle: build → test → deploy → monitor. • Apply Infrastructure-as-Code using Terraform & Kubernetes. • Implement auto-scaling, observability, and production-grade CI/CD pipelines. • Showcase DevOps skills across multiple platforms & tools.
 
-&#8226; Building a Docker image of the Flask app.
+⸻
 
-&#8226; Creating test jobs to verify the Flask app's functionality.
+🔧 Tech Stack
 
-&#8226; Deploying the Flask app to the Kubernetes cluster.
+Category Technology Details App Flask (Python) REST API + Docker CI/CD Jenkins Multi-stage pipeline IaC Terraform AWS EKS provisioning (incl. IAM, EC2) Container Docker App containerization Orchestration Kubernetes (EKS) Cluster on AWS Deployment Helm Helm chart for rollout/versioning Monitoring Prometheus & Grafana Via Docker Compose Auto-scaling Kubernetes HPA Horizontal Pod Autoscaler Storage AWS S3 + DynamoDB Test reports and logs Testing Selenium Automated UI testing
 
-&#8226; Additional functionality for creating EC2 instances, IAM users, Jenkins jobs (pipeline and freestyle), and Jenkins users.
+⸻
 
-4. Kubernetes Cluster: The Jenkins Agent creates a Kubernetes cluster with three worker nodes using Terraform. The Kubernetes cluster is provisioned using Terraform code.
-5. Flask App: After successful testing, the Flask app is deployed within the Kubernetes cluster.
-6. Helm: Helm is used to package and deploy the Flask app as a Helm chart to the Kubernetes cluster, simplifying application management and version control.
-7. Prometheus & Grafana: Local instances for monitoring. Prometheus collects metrics from the Flask app running in the EKS cluster, and Grafana provides data visualization for monitoring and analyzing metrics, including CPU usage. The monitoring setup is orchestrated using Docker Compose.
-8. Autoscaling using HPA: A Kubernetes Horizontal Pod Autoscaler (HPA) component that automatically scales the number of pods based on CPU utilization. The HPA adjusts the number of pods for the Flask app based on resource utilization.
+🌟 Features
 
-## Testing, Deployment and Lifecycle Management
+✅ End-to-end CI/CD pipeline with Jenkins ✅ Infrastructure provisioning via Terraform ✅ Docker image builds + push to DockerHub ✅ Helm-based deployment to Kubernetes ✅ Live monitoring with Prometheus + Grafana ✅ Auto-scaling via HPA based on CPU usage ✅ Test results stored in AWS (S3 + DynamoDB)
 
-The deployment and lifecycle management of the applications are orchestrated using Jenkins pipeline jobs. The Jenkins pipeline includes the following stages:
+⸻
 
-1. The test job provisions necessary resources using Terraform, such as an S3 bucket and a DynamoDB table.
-2. The Flask app's functionality is tested using Selenium, and the test results are uploaded to the S3 bucket and DynamoDB table.
-3. The Docker image created by the infrastructure code (after testing) is pushed to Dockerhub.
-4. The same image tag used in the test job is used in the deployment job, which deploys the Flask app to the Kubernetes cluster.
-5. The Helm chart for the Flask app is packaged and deployed to the Kubernetes cluster using Helm.
-6. Autoscaling Deployment: The Kubernetes Horizontal Pod Autoscaler (HPA) component is integrated into the deployment process. It automatically adjusts the number of pods for the Flask app based on CPU utilization. As the application's load increases, the HPA dynamically scales up the number of pods to meet the demand, ensuring optimal performance and resource utilization.
+🗂️ Folder Structure
 
-## Getting started
+FlaskOps/ ├── infra_flask_app/ # Flask Infra backend app (runs inside Jenkins Agent) ├── terraform/ # Terraform for AWS resources (EKS, EC2, IAM, etc.) ├── jenkins_files/ # Jenkins pipeline definitions ├── k8s/mychart/ # Helm chart for deployment ├── monitoring/ # Prometheus + Grafana via Docker Compose ├── tests/ # Selenium tests ├── Dockerfiles/ # Docker configs for all services └── README.md
 
-To get started with FlaskOps, follow these steps:
+⸻
 
-1. Clone this repository to your local environment.
-2. Install Jenkins on your machine and set up the Jenkins Master.
-3. Install Docker on your machine for local monitoring with Prometheus and Grafana.
-4. Install Terraform on your machine for infrastructure provisioning.
-5. Set up your AWS credentials to allow Jenkins to interact with AWS resources.
-6. Create a Jenkins Agent (Slave) that will execute the Jenkins jobs.
-7. Configure the Jenkins Agent to have the necessary permissions to perform tasks like creating the EKS cluster and creating EC2 instances.
-8. Install Helm on your machine for packaging and deploying the Flask app.
-9. Set up Docker Compose to run Prometheus and Grafana locally for monitoring.
-10. Ensure Kubernetes is properly installed and configured on the Jenkins Agent for cluster creation.
-11. Customize the Jenkins jobs to match your specific requirements.
+🧭 Architecture Diagram
 
-## Usage
+WhatsApp Image 2025-08-05 at 11 40 44
 
-To use FlaskOps, follow these steps:
+⸻
 
-1. Run the Jenkins job responsible for creating the EKS cluster.
-2. Trigger the Infra Flask App job to build the Docker image, run tests, and deploy the Flask app to the Kubernetes cluster using Helm.
-3. Access the Prometheus and Grafana dashboards to monitor the Flask app's performance and CPU usage.
-4. The Kubernetes HPA will automatically scale the number of pods based on CPU utilization.
+🚀 Getting Started 1. Clone the repo
 
-## Conclusion
+git clone https://github.com/sivanmarom/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes.git cd FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes
 
-FlaskOps showcases the power of DevOps automation by integrating various tools and technologies to streamline the deployment and management of Flask applications on Kubernetes. Feel free to explore, customize, and expand this project according to your unique requirements. Happy FlaskOps-ing!
+2.	Install dependencies
+•	Jenkins
+•	Docker
+•	Terraform
+•	Helm
+•	AWS CLI configured with proper IAM permissions
+•	Prometheus & Grafana via Docker Compose
+3.	Run Jenkins Jobs
+•	🔧 infra_flask_app – builds Docker image, runs tests, pushes image
+•	🚀 deploy_job – deploys to Kubernetes using Helm
+•	📊 Access monitoring dashboards on http://localhost:3000 (Grafana)
+⸻
 
-## Contributing
+⚙️ Automation Flow 1. Terraform provisions AWS infrastructure: EKS, S3, DynamoDB 2. Jenkins builds + tests Flask app (Selenium) 3. Docker image is pushed to DockerHub 4. Helm deploys app to EKS 5. Prometheus scrapes metrics → Grafana visualizes them 6. HPA monitors CPU and scales pods as needed
 
-Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
+⸻
 
-1. Fork the repository.
-2. Create a new branch: git checkout -b new-feature.
-3. Make your changes and commit them: git commit -m 'Add some feature'.
-4. Push your changes to the branch: git push origin new-feature.
-5. Submit a pull request detailing your changes.
+📈 Monitoring & Scaling • 📊 Grafana Dashboard: Tracks CPU usage, requests, and pod count • 📡 Prometheus Alerts: Resource usage + performance metrics • 🔁 HPA (Horizontal Pod Autoscaler): Auto-adjusts pods based on CPU
 
-## License
+⸻
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+🧪 Example Selenium Test Output
 
-## Contact
+Test reports are uploaded to AWS S3 and indexed in DynamoDB
 
-If you have any questions, suggestions, or feedback, please feel free to contact Sivan Marom at sivmarom@gmail.com.
+⸻
+
+🤝 Contributing
+
+Contributions are welcome!
+
+git fork git checkout -b feature/my-feature git commit -m "Add new feature" git push origin feature/my-feature open a Pull Request
+
+⸻
+
+📬 Contact
+
+Sivan Marom 📧 sivmarom@gmail.com 
+🔗 LinkedIn Profile www.linkedin.com/in/sivan-marom 
