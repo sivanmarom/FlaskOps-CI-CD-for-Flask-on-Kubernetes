@@ -30,7 +30,8 @@ FlaskOps/ ├── infra_flask_app/ # Flask Infra backend app (runs inside Jenk
 
 🧭 Architecture Diagram
 
-WhatsApp Image 2025-08-05 at 11 40 44
+
+![WhatsApp Image 2025-08-05 at 11 40 44](https://github.com/user-attachments/assets/96d2917c-4c22-4ae0-8aa8-3f5df40416eb)
 
 ⸻
 
