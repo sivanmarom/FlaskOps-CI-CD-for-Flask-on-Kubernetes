@@ -234,5 +234,11 @@ port-forward:
 ## 📄 License
 MIT
 
-## 📬 Contact
-Dana (Sivan) Marom • sivmarom@gmail.com • LinkedIn: https://www.linkedin.com/in/sivan-marom
+---
+
+## 💬 Contact
+
+For suggestions, improvements, or collaboration:
+- 📧 [Sivmarom@gmail.com](mailto:Sivmarom@gmail.com)
+- 🔗 [LinkedIn](https://www.linkedin.com/in/sivan-marom/)
+- 💻 [GitHub](https://github.com/YOUR_USERNAME)
