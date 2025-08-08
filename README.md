@@ -1,80 +1,156 @@
-⸻
 
-🚀 FlaskOps – CI/CD for Flask on Kubernetes
+# 🌐 Personal Portfolio – React & Flask
 
-FlaskOps is a full-stack DevOps project that demonstrates end-to-end CI/CD automation for deploying a Flask application on Kubernetes (EKS). It showcases the use of Jenkins, Terraform, Docker, Helm, Prometheus, Grafana, and HPA to manage, monitor, and scale a cloud-native app.
+A fully containerized personal portfolio website built with **React** for the frontend and **Flask** for the backend. This project showcases frontend design, backend integration, CI/CD automation, and a modern DevOps deployment pipeline.
 
-⸻
+---
 
-🧩 Project Goals • Automate the full development lifecycle: build → test → deploy → monitor. • Apply Infrastructure-as-Code using Terraform & Kubernetes. • Implement auto-scaling, observability, and production-grade CI/CD pipelines. • Showcase DevOps skills across multiple platforms & tools.
+## 🖥️ Live Website Features
 
-⸻
+This portfolio is designed to be both visually appealing and technically impressive.
 
-🔧 Tech Stack
+### ✨ Main Sections
 
-Category Technology Details App Flask (Python) REST API + Docker CI/CD Jenkins Multi-stage pipeline IaC Terraform AWS EKS provisioning (incl. IAM, EC2) Container Docker App containerization Orchestration Kubernetes (EKS) Cluster on AWS Deployment Helm Helm chart for rollout/versioning Monitoring Prometheus & Grafana Via Docker Compose Auto-scaling Kubernetes HPA Horizontal Pod Autoscaler Storage AWS S3 + DynamoDB Test reports and logs Testing Selenium Automated UI testing
+| Section     | Description |
+|-------------|-------------|
+| `Hero`      | Eye-catching intro with your name, dynamic subtitle (react-type-animation), navigation buttons, and avatar. |
+| `About`     | A short personal introduction with professional background. |
+| `Skills`    | Visual representation of technologies you're proficient in. |
+| `Resume`    | Button to download resume and/or link to LinkedIn profile. |
+| `Projects`  | Selected personal projects with descriptions and links. |
+| `Contact`   | Contact form connected to EmailJS + direct links to GitHub, Email, LinkedIn. |
+| `Navigation`| Sticky scroll-based navigation between sections. |
 
-⸻
+---
 
-🌟 Features
+## 🧱 Tech Stack
 
-✅ End-to-end CI/CD pipeline with Jenkins ✅ Infrastructure provisioning via Terraform ✅ Docker image builds + push to DockerHub ✅ Helm-based deployment to Kubernetes ✅ Live monitoring with Prometheus + Grafana ✅ Auto-scaling via HPA based on CPU usage ✅ Test results stored in AWS (S3 + DynamoDB)
+| Area             | Technologies                            |
+|------------------|------------------------------------------|
+| Frontend         | React, TailwindCSS, Framer Motion        |
+| Backend          | Flask                                    |
+| CI/CD            | GitHub Actions                           |
+| DevOps           | Docker, Docker Compose                   |
+| Container Registry | DockerHub                            |
+| Email Services   | EmailJS                                  |
+| Deployment       | Render.com (Web Service + Static Site)   |
 
-⸻
+---
 
-🗂️ Folder Structure
+## ✅ What’s Done So Far
 
-FlaskOps/ ├── infra_flask_app/ # Flask Infra backend app (runs inside Jenkins Agent) ├── terraform/ # Terraform for AWS resources (EKS, EC2, IAM, etc.) ├── jenkins_files/ # Jenkins pipeline definitions ├── k8s/mychart/ # Helm chart for deployment ├── monitoring/ # Prometheus + Grafana via Docker Compose ├── tests/ # Selenium tests ├── Dockerfiles/ # Docker configs for all services └── README.md
+### 📦 Development
 
-⸻
+- Built all React components (Hero, Skills, Projects, Contact, etc.).
+- Structured code into clean and reusable components.
+- Implemented basic backend API endpoint: `GET /api/hello`.
+- Enabled CORS support with `flask-cors`.
 
-🧭 Architecture Diagram
+---
 
+### 🐳 Docker
 
-![WhatsApp Image 2025-08-05 at 11 40 44](https://github.com/user-attachments/assets/96d2917c-4c22-4ae0-8aa8-3f5df40416eb)
+- Created separate `Dockerfile`s for `frontend` and `backend`.
+- Wrote `docker-compose.yml` to orchestrate both services.
+- Ensured networking between containers (frontend uses `backend` hostname).
+- CORS issues resolved for cross-service requests.
 
-⸻
+---
 
-🚀 Getting Started 1. Clone the repo
+### 🧪 CI with GitHub Actions
 
-git clone https://github.com/sivanmarom/FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes.git cd FlaskOps-Orchestrating-Flask-Applications-on-Kubernetes
+- Created workflow: `CI with Docker Compose` that:
+  - Checks out the repo
+  - Runs `docker-compose up --build`
+  - Verifies backend with `curl http://localhost:5000/api/hello`
+  - Verifies frontend with `curl http://localhost:3000`
+  - Shuts down containers with `docker-compose down`
 
-2.	Install dependencies
-•	Jenkins
-•	Docker
-•	Terraform
-•	Helm
-•	AWS CLI configured with proper IAM permissions
-•	Prometheus & Grafana via Docker Compose
-3.	Run Jenkins Jobs
-•	🔧 infra_flask_app – builds Docker image, runs tests, pushes image
-•	🚀 deploy_job – deploys to Kubernetes using Helm
-•	📊 Access monitoring dashboards on http://localhost:3000 (Grafana)
-⸻
+---
 
-⚙️ Automation Flow 1. Terraform provisions AWS infrastructure: EKS, S3, DynamoDB 2. Jenkins builds + tests Flask app (Selenium) 3. Docker image is pushed to DockerHub 4. Helm deploys app to EKS 5. Prometheus scrapes metrics → Grafana visualizes them 6. HPA monitors CPU and scales pods as needed
+### 🐋 DockerHub Integration
 
-⸻
+- Added `docker-push` job to:
+  - Build and tag Docker images (`latest`)
+  - Push frontend & backend images to DockerHub
+- Uses GitHub Secrets for secure authentication (`DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`)
 
-📈 Monitoring & Scaling • 📊 Grafana Dashboard: Tracks CPU usage, requests, and pod count • 📡 Prometheus Alerts: Resource usage + performance metrics • 🔁 HPA (Horizontal Pod Autoscaler): Auto-adjusts pods based on CPU
+---
 
-⸻
+### ☁️ Deployment to Render
 
-🧪 Example Selenium Test Output
+- Manually created two Render services:
+  - `portfolio-frontend`: Static Site
+  - `portfolio-backend`: Web Service on port 5000
+- Dynamic domain handling in frontend via `window.location.hostname`
+- Added GitHub Action `deploy-to-render` job to:
+  - Trigger deployment via Render Deploy Hook Web URLs
+  - Ensures latest Docker images are used automatically
 
-Test reports are uploaded to AWS S3 and indexed in DynamoDB
+---
 
-⸻
+## 🚀 What's Next?
 
-🤝 Contributing
+### 🔧 Backend Improvements
 
-Contributions are welcome!
+- Add database (PostgreSQL or SQLite) for dynamic project management.
+- Build full RESTful API with CRUD support for portfolio content.
+- Add admin dashboard to manage messages from contact form.
+- Extend Flask structure with Blueprints, error handling, and logging.
 
-git fork git checkout -b feature/my-feature git commit -m "Add new feature" git push origin feature/my-feature open a Pull Request
+### 📈 Production Upgrades
 
-⸻
+- Add analytics (Google Analytics 4 / Hotjar).
+- Integrate Sentry or similar tool for backend error logging.
+- Set up staging environment for testing changes before production.
 
-📬 Contact
+---
 
-Sivan Marom 📧 sivmarom@gmail.com 
-🔗 LinkedIn Profile www.linkedin.com/in/sivan-marom 
+## 🛠 Local Development
+
+```bash
+# Clone the repo
+git clone https://github.com/YOUR_USERNAME/portfolio.git
+cd portfolio
+
+# Run using Docker Compose
+docker compose up --build
+```
+
+#### Default URLs:
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:5000/api/hello](http://localhost:5000/api/hello)
+
+---
+
+## 📁 Project Structure
+
+```
+portfolio/
+│
+├── frontend/                  # React app
+│   ├── src/
+│   │   ├── components/        # Hero, About, Skills, Projects, Contact, etc.
+│   │   └── App.jsx
+│   └── Dockerfile
+│
+├── backend/                   # Flask API
+│   ├── app.py
+│   └── Dockerfile
+│
+├── docker-compose.yml         # Runs both services together
+└── .github/
+    └── workflows/
+        └── ci.yml             # GitHub Actions workflow
+```
+
+---
+
+## 💬 Contact
+
+For suggestions, improvements, or collaboration:
+- 📧 [Sivmarom@gmail.com](mailto:Sivmarom@gmail.com)
+- 🔗 [LinkedIn](https://www.linkedin.com/in/sivan-marom/)
+- 💻 [GitHub](https://github.com/YOUR_USERNAME)
+
+---
